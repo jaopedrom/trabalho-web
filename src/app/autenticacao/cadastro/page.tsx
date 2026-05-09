@@ -1,3 +1,5 @@
-export default function Page() {
-
+export default function AuthCadastroPage() {
+    return (
+        <h1>Cadastro</h1>
+    )
 }
