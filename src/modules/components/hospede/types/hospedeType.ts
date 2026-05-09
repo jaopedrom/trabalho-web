@@ -1,7 +1,7 @@
-export interface HospedeType {
-    id: string;
-    nome: string;
-    email: string;
-    telefone: string;
+// interface que herda de pessoa
+
+import {Pessoa} from "@/src/modules/components/pessoa/types/pessoaType";
+
+export interface HospedeType extends Pessoa{
     cpf: string;
 }

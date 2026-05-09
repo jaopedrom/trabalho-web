@@ -1,6 +1,8 @@
-export interface Imovel {
+// interface base de imoveis
+
+export interface ImovelType {
     id: string;
-    locadorId: string; // Para vincular o imóvel ao dono (Locador)
+    locadorId: string;
     titulo: string;
     foto: string;
     localizacao: string;
