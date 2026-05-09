@@ -1,5 +1,9 @@
+'use client'
+
+import Cadastro from "@/src/modules/components/Cadastro";
+
 export default function AuthCadastroPage() {
     return (
-        <h1>Cadastro</h1>
+        <Cadastro />
     )
 }
