@@ -1,8 +1,6 @@
-// interface base de imoveis
-
 export interface ImovelType {
     id: string;
-    locadorId: string;
+    usuarioId: string; // Atualizado de locadorId para usuarioId
     titulo: string;
     foto: string;
     localizacao: string;
