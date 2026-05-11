@@ -1,30 +1,33 @@
 "use client"
+
 import { CadastroForm, CadastroFormInputs} from "@/src/modules/components/CadastroForm";
-import { hospedesMock } from "@/src/modules/components/hospede/mocks/mockHospede";
-import { HospedeType } from "@/src/modules/components/hospede/types/hospedeType";
+import { usuariosMock } from "@/src/modules/components/usuario/mock/mockUsuario";
+import { UsuarioType} from "@/src/modules/components/usuario/type/usuarioType";
+
 
 export default function CadastroPage() {
 
     const processarCadastro = (data: CadastroFormInputs) => {
-        //verifica se cpf existe
-        const usuarioJaExiste = hospedesMock.find(h => h.cpf === data.cpf);
+        // verifica se o CPF ja existe na lista de usuários
+        const usuarioJaExiste = usuariosMock.find(u => u.cpf === data.cpf);
 
         if (usuarioJaExiste) {
             alert("Este CPF já está cadastrado em nosso sistema!");
             return;
         }
 
-        // monta objeto novoHospede no formato HospedeType gerando um ID falso
-        const novoHospede: HospedeType = {
-            id: `hospede-${Date.now()}`, // id gerado com base na data atual
-            ...data // insere os dados do formulário (nome, email, cpf, etc)
+        // monta o objeto novoUsuario no formato UsuarioType
+        const novoUsuario: UsuarioType = {
+            id: `user-${Date.now()}`, // ID gerado com base no timestamp
+            ...data, // insere nome, email, cpf, senha, telefone
+            imoveis: [] // todo novo usuário começa com a lista de imoveis vazia
         };
 
-        // salva no mock da dados
-        hospedesMock.push(novoHospede);
+        // salva no mock
+        usuariosMock.push(novoUsuario);
 
-        // exibe no console e mensagem de confirmacao
-        console.log("Novo hóspede cadastrado:", novoHospede);
+        // exibe no console e mensagem de confirmação
+        console.log("Novo usuário cadastrado:", novoUsuario);
         alert("Cadastro realizado com sucesso!");
     };
 
@@ -33,9 +36,8 @@ export default function CadastroPage() {
             <div className="bg-white p-8 rounded-lg shadow-md flex flex-col items-center">
                 <h1 className="text-2xl font-bold mb-6 text-center">Crie sua Conta</h1>
 
-                {/*chamada do componente*/}
+                {/* chamada do componente de formulário */}
                 <CadastroForm aoEnviar={processarCadastro} />
-
             </div>
         </main>
     );

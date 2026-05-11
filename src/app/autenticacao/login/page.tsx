@@ -1,7 +1,7 @@
 "use client"
 
 import { LoginForm, LoginFormInputs} from "@/src/modules/components/Login";
-import { hospedesMock } from "@/src/modules/components/hospede/mocks/mockHospede";
+import { usuariosMock } from "@/src/modules/components/usuario/mock/mockUsuario";
 
 export default function LoginPage() {
 
@@ -10,8 +10,8 @@ export default function LoginPage() {
         console.log("Dados capturados na Página:", data);
 
         // salva dados do usuario encontrado no localstorage
-        const usuarioEncontrado = hospedesMock.find((hospede) =>
-            hospede.cpf === data.cpf && hospede.senha === data.senha
+        const usuarioEncontrado = usuariosMock.find((usuario) =>
+            usuario.cpf === data.cpf && usuario.senha === data.senha
         );
 
         if (usuarioEncontrado) {
