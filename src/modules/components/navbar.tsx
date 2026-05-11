@@ -5,7 +5,7 @@ import { useMediaQuery } from '@base-ui/react/unstable-use-media-query';
 
 import Link from "next/link";
 import AuthLoginPage from "@/src/app/autenticacao/login/page";
-import AuthCadastroPage from "@/src/app/autenticacao/cadastro/page";
+import CadastroPage from "@/src/app/autenticacao/cadastro/page";
 
 export default function Navbar() {
     const isDesktop = useMediaQuery('(min-width: 700px)', { defaultMatches: true });
