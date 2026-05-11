@@ -10,9 +10,9 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 
-import {ImovelType} from "@/src/modules/components/imoveis/types/imoveisType";
+import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
 
-export function CardImage({data }: { data: ImovelType }) {
+export function CardImage({ data }: { data: ImovelType }) {
 
     return (
         <Card className="relative mx-auto w-full max-w-sm pt-0">
@@ -24,11 +24,16 @@ export function CardImage({data }: { data: ImovelType }) {
             />
             <CardHeader>
                 <CardAction>
-                    <Badge variant="secondary">ID: {data.id}</Badge>
+                    <Badge variant={data.status === 'livre' ? 'default' : 'secondary'}>
+                        {data.status.toUpperCase()}
+                    </Badge>
                 </CardAction>
                 <CardTitle>{data.titulo}</CardTitle>
                 <CardDescription>
-                    A practical talk on component APIs, accessibility, and shipping faster.
+                    <span className="block mb-1"> {data.localizacao}</span>
+                    <span className="font-semibold text-gray-900">
+                        R$ {data.valorDiaria.toFixed(2)} / noite
+                    </span>
                 </CardDescription>
             </CardHeader>
             <CardFooter>
