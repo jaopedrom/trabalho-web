@@ -1,4 +1,6 @@
 "use client"
+
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,7 +14,13 @@ import {
 
 import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
 
-export function CardImage({ data }: { data: ImovelType }) {
+// interface para receber os dados do imovel eo ID do dono, caso teha
+interface CardImageProps {
+    data: ImovelType;
+    perfilId?: string; // '?' torna opcional
+}
+
+export function CardImage({ data, perfilId }: CardImageProps) {
 
     return (
         <Card className="relative mx-auto w-full max-w-sm pt-0">
@@ -36,8 +44,26 @@ export function CardImage({ data }: { data: ImovelType }) {
                     </span>
                 </CardDescription>
             </CardHeader>
-            <CardFooter>
-                <Button className="w-full">Ver Imóvel</Button>
+
+            <CardFooter className="flex gap-2">
+
+                {/* botao Ver imovel Sempre visivel */}
+                {/* Se o botão de editar existir eh colocado "outline" para destaque */}
+                <Link href={`/imovel/${data.id}`} className="flex-1">
+                    <Button variant={perfilId ? "outline" : "default"} className="w-full text-xs">
+                        Ver Imóvel
+                    </Button>
+                </Link>
+
+                {/* botao de editar imovel renderizacao condicional, aparece apenas se o perfilId for passado) */}
+                {perfilId && (
+                    <Link href={`/usuario/${perfilId}/imoveis/${data.id}/editor`} className="flex-1">
+                        <Button className="w-full text-xs bg-blue-600 hover:bg-blue-700 text-white">
+                            Editar Imóvel
+                        </Button>
+                    </Link>
+                )}
+
             </CardFooter>
         </Card>
     )
