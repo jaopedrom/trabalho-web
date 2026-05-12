@@ -19,8 +19,9 @@ export default function Home() {
         <main style={{ padding: '2rem' }}>
             <h1>Imoveis disponiveis:</h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {imoveis.map(imovel => (
+            {/* Grid responsivo: 1 coluna no celular, 2 no tablet, 3 ou 4 no desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {imoveisMock.map((imovel) => (
                     <CardImage
                         key={imovel.id}
                         data={imovel}
