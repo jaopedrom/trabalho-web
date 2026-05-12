@@ -50,13 +50,6 @@ export default function NavbarGeral() {
                     </Link>
                 </NavigationMenu.Item>
 
-                {/* Link padrão estatico: Sobre */}
-                <NavigationMenu.Item>
-                    <Link className={triggerClassName} href="/sobre">
-                        Sobre
-                    </Link>
-                </NavigationMenu.Item>
-
                 {/* rendeizacao condicional do botao de autenticacao */}
                 <NavigationMenu.Item>
                     {/* verifica se o componente foi rederizado, caso nao foi, mostra uma espaco vazio */}
