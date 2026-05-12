@@ -21,6 +21,7 @@ export default function NavbarGeral() {
     // executa apenas uma vez quando o componente surge na tela do navegador
     React.useEffect(() => {
         // o componente já está no navegador,entao renderizar as coisas dinamicas
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMontado(true);
 
         // faz uma leitura direta no localStorage

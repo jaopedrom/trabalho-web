@@ -15,6 +15,7 @@ export function MenubarDemo() {
 
     // assim que a tela carrega no navegador, o useEffect dispara e muda o estado
     React.useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMontado(true);
     }, []);
 
