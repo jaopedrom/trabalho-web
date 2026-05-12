@@ -5,55 +5,54 @@ export const usuariosMock: UsuarioType[] = [
         id: "user-1",
         nome: "Ana Silva",
         email: "ana@email.com",
-        telefone: "11999999999",
+        telefone: "(11) 99999-9999",
         senha: "password123",
-        cpf: "11111111111",
-        imoveis: [] // Ana no momento age apenas como hóspede
+        cpf: "111.111.111-11",
+        imoveis: []
     },
     {
         id: "user-2",
         nome: "Carlos Eduardo",
         email: "carlos@email.com",
-        telefone: "21988888888",
+        telefone: "(21) 98888-8888",
         senha: "password456",
-        cpf: "22222222222",
-        imoveis: [] // Carlos também age apenas como hóspede
+        cpf: "222.222.222-22",
+        imoveis: []
     },
     {
         id: "user-3",
         nome: "Roberto Santos",
-        email: "roberto@imoveis.com",
-        telefone: "41977777777",
+        email: "roberto@imovel.com",
+        telefone: "(41) 97777-7777",
         senha: "password789",
-        cpf: "33333333333", // Adicionado um CPF fictício, pois agora é obrigatório
-        imoveis: [
-            {
-                id: "imovel-101",
-                usuarioId: "user-3", // Conectado ao id do Roberto
-                titulo: "Casa de Praia",
-                foto: "url-da-foto-1.jpg",
-                localizacao: "Florianópolis, SC",
-                valorDiaria: 350.00,
-                status: "livre"
-            },
-            {
-                id: "imovel-102",
-                usuarioId: "user-3",
-                titulo: "Apartamento Centro",
-                foto: "url-da-foto-2.jpg",
-                localizacao: "Curitiba, PR",
-                valorDiaria: 200.00,
-                status: "ocupado"
-            }
-        ]
+        cpf: "333.333.333-33",
+        imoveis: []
     },
     {
         id: "user-4",
         nome: "Fernanda Costa",
         email: "fernanda.host@email.com",
-        telefone: "31966666666",
+        telefone: "(31) 96666-6666",
         senha: "password321",
-        cpf: "44444444444",
+        cpf: "444.444.444-44",
+        imoveis: []
+    },
+    {
+        id: "user-5",
+        nome: "Mariana Oliveira",
+        email: "mariana@email.com",
+        telefone: "(11) 95555-5555",
+        senha: "password555",
+        cpf: "555.555.555-55",
+        imoveis: []
+    },
+    {
+        id: "user-6",
+        nome: "Pedro Henrique",
+        email: "pedro@email.com",
+        telefone: "(48) 94444-4444",
+        senha: "password666",
+        cpf: "666.666.666-66",
         imoveis: []
     }
 ];
