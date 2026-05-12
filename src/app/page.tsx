@@ -1,6 +1,6 @@
 "use client"
 
-import {CardImage} from "@/src/modules/components/Card";
+import {CardImage} from "../modules/components/card-imoveis";
 import {useEffect, useState} from "react";
 import {ImovelType} from "@/src/modules/components/imoveis/types/imoveisType";
 import {imoveisMock} from "@/src/modules/components/imoveis/mocks/imoveisMock";
