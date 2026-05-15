@@ -57,7 +57,7 @@ export function CardImage({ data, perfilId }: CardImageProps) {
 
                 {/* botao de editar imovel renderizacao condicional, aparece apenas se o perfilId for passado) */}
                 {perfilId && (
-                    <Link href={`/usuario/${perfilId}/imoveis/${data.id}/editor`} className="flex-1">
+                    <Link href={`/usuario/${perfilId}/imovel-usuario/${data.id}/editor`} className="flex-1">
                         <Button className="w-full text-xs bg-blue-600 hover:bg-blue-700 text-white">
                             Editar Imóvel
                         </Button>
