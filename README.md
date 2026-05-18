@@ -121,8 +121,6 @@ src
 │   │   └── login
 │   │       └── page.tsx
 │   ├── favicon.ico
-│   ├── gerenciamento-usuario
-│   │   └── page.tsx
 │   ├── globals.css
 │   ├── imovel
 │   │   └── [slug]
@@ -309,7 +307,6 @@ Páginas abertas para qualquer visitante. Não exigem sessão ativa no `localSto
 ### Rotas Privadas (Protegidas)
 Área restrita. Apenas usuários logados (com o status `estaAutenticado === true` no Contexto) podem acessar. O componente `useEffect` dessas páginas monitora a sessão e realiza o redirecionamento (`router.push`) caso o usuário não tenha permissão.
 
-* **`/gerenciamento-usuario`:** Página de configuração/gerenciamento de conta do usuário.
 * **`/usuario`:** Ponto de entrada para o ecossistema do usuário logado (renderiza o layout com a Sidebar).
 * **`/usuario/[perfil]`:** Dashboard principal do usuário logado, exibindo seus dados pessoais.
 * **`/usuario/[perfil]/historico`:** Tabela com o histórico de estadias/reservas (concluídas, futuras ou canceladas).
@@ -351,6 +348,16 @@ negócio e persistência de dados.
 - **Passo 6: Persistência e Feedback**
     - A **Página Pai** salva o novo objeto no banco de dados simulado (Mock array) ou no `localStorage` do navegador.
     - Por fim, dispara um aviso de sucesso para o usuário e o redireciona automaticamente para a rota de Login (`/autenticacao/login`).
+---
+### Arquitetura: Edição de Perfil
+
+**Padrão Utilizado:** Formulário Controlado com Alternância de Estados.
+
+A funcionalidade de edição de perfil de usuário (`usuario/[perfil]`) utiliza o `React Hook Form` juntamente com o `Zod` para validação e gerenciamento de estados no lado do cliente.
+
+- **Componente Principal e Formulário:** O perfil do usuário gerencia um estado `estaEditando` (booleano). Quando desativado, o formulário (`EdicaoUsuarioForm`) exibe os dados pessoais em modo apenas leitura.
+- **Interatividade:** Ao clicar em "Editar", o estado muda, habilitando os inputs para edição. Isso permite uma experiência fluida de visualização e edição sem trocar de página ou abrir novos modais.
+- **Ciclo de Atualização:** Após a validação via Zod (sem erros de esquema), o evento `aoEnviar` eleva os dados de volta para a página, que então sai do modo de edição. Questões de hidratação (SSR vs Client) foram contornadas para garantir a estabilidade do estado.
 ---
 ## Lógica de Autenticação e Fluxo do Usuário
 
