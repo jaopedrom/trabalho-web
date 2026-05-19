@@ -37,47 +37,54 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 # Sistema de Aluguel de Imóveis
 
-Plataforma web para gerenciamento e reserva de imóveis, construída com Next.js 15 e TypeScript. Anfitriões cadastram propriedades e controlam disponibilidade; hóspedes navegam e reservam o que estiver livre.
+Uma plataforma web moderna para gerenciamento e reserva de imóveis, 
+desenvolvida com Next.js 15 e TypeScript. O sistema permite que anfitriões 
+cadastrem suas propriedades e gerenciem disponibilidade, enquanto hóspedes 
+podem navegar e visualizar imóveis disponíveis para locação.
 
 ## Sobre o Projeto
 
-Projeto acadêmico que implementa um marketplace de locação temporária de imóveis, com referência ao modelo do Airbnb. O foco foi em autenticação persistente, gerenciamento de estado global e uma interface que funciona bem em diferentes tamanhos de tela.
+Este é um projeto acadêmico de desenvolvimento web que implementa um sistema 
+completo de marketplace de imóveis para locação temporária, similar a 
+plataformas como Airbnb. O foco está em criar uma experiência de usuário 
+fluida com autenticação persistente, gerenciamento de estado global e 
+interface responsiva.
 
 ## Funcionalidades
 
 ### Autenticação e Autorização
-
-- Login e cadastro de usuários
-- Sessão persistente via Context API e LocalStorage
+- Sistema completo de login e cadastro
+- Autenticação persistente com Context API e LocalStorage
 - Proteção de rotas privadas
+- Gerenciamento de sessão do usuário
 
 ### Gerenciamento de Usuários
-
-- Dashboard individual por usuário
-- Edição de dados pessoais
+- Dashboard personalizado para cada usuário
+- Visualização e edição de dados pessoais
 - Histórico de hospedagens
 - Sidebar de navegação contextual
 
 ### Gestão de Imóveis
-
-- **CRUD completo**: cadastro, visualização, edição e dashboard do anfitrião
-- **Status**: Livre, Ocupado, Manutenção
-- **Campos**: título, foto, localização, diária
+- **CRUD Completo**:
+  - Cadastro de novos imóveis
+  - Visualização detalhada de propriedades
+  - Edição de informações e status
+  - Dashboard de imóveis do anfitrião
+- **Controle de Status**: Livre, Ocupado, Manutenção
+- **Informações**: Título, foto, localização, valor da diária
 
 ### Área Pública
+- Listagem de todos os imóveis disponíveis
+- Página de detalhes públicos de cada propriedade
+- Interface responsiva em grid adaptativo
+- Cards informativos com status visual
 
-- Listagem de imóveis disponíveis, com propriedades ocupadas ou em manutenção ocultadas automaticamente
-- **Busca por datas**: filtra imóveis cruzando o intervalo selecionado com as reservas ativas
-- Página de detalhes de cada imóvel
-- Grid adaptativo e cards com status visual
-
-### Interface
-
-- Design minimalista
-- Componentes com shadcn/ui e Base UI
-- Tailwind CSS
-- Tema claro/escuro via variáveis CSS
-- Animações e transições
+### Interface do Usuário
+- Design moderno e minimalista
+- Componentes reutilizáveis com shadcn/ui e Base UI
+- Sistema de design com Tailwind CSS
+- Tema claro/escuro (variáveis CSS)
+- Animações e transições suaves
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -94,8 +101,6 @@ Projeto acadêmico que implementa um marketplace de locação temporária de im�
 ### UI/UX
 - **[Tailwind CSS](https://tailwindcss.com/)** - Framework CSS utility-first
 - **[shadcn/ui](https://ui.shadcn.com/)** - Componentes React acessíveis
-- **[react-tailwindcss-datepicker](https://react-tailwindcss-datepicker.vercel.app/)** - Componente de calendário/datepicker
-- **[dayjs](https://day.js.org/)** - Biblioteca para manipulação de datas, requisito do react-tailwindcss-datepicker
 - **[Base UI](https://base-ui.netlify.app/)** - Componentes headless
 - **[Phosphor Icons](https://phosphoricons.com/)** - Biblioteca de ícones
 - **[class-variance-authority](https://cva.style/)** - Variantes de componentes
@@ -238,18 +243,27 @@ O projeto utiliza mocks para desenvolvimento. Usuários de teste:
 Estudante de Ciência da Computação - UTFPR Santa Helena
 
 ---
-## Tipagem e Arquitetura de Dados
+**Estrutura de Tipagem e Arquitetura de Dados:**
 
-A modelagem usa uma única entidade para todos os usuários: `Usuario`. Não há 
-distinção entre "hóspede" e "locador".
+Na modelagem de dados da plataforma, optamos por uma arquitetura simplificada e 
+unificada. Percebemos que não há necessidade de criar diferenciações ou separar 
+os usuários em perfis distintos (como "hóspede" ou "locador"). Na nossa 
+aplicação, todos são tratados centralmente através de uma única entidade: 
+**`Usuario`**.
 
-O perfil é uma página só. Nela aparecem os dados pessoais, o histórico de 
-reservas e os imóveis cadastrados. Usuário sem imóvel? O campo `imoveis` vem 
-vazio (`[]`).
+A regra de negócio e a interface seguem um fluxo direto: existe apenas uma 
+página de perfil de usuário. Nela, o usuário pode visualizar todas as suas 
+informações pessoais, o histórico de suas reservas e a lista de seus imóveis 
+cadastrados.
 
-### 1. Interface `UsuarioType`
+A estrutura do banco de dados (mock) reflete essa simplicidade. Se um usuário 
+não possui imóveis para alugar, o campo `imoveis` será apenas um array vazio 
+(`[]`), sem necessidade de criar lógicas complexas de permissão ou visões 
+diferentes na plataforma.
 
-Reúne os dados de cadastro, credenciais de acesso e a lista de propriedades do usuário.
+**1. Interface de Usuário (`UsuarioType`)** Contém todos os dados essenciais de
+cadastro, credenciais de acesso e a relação de propriedades do usuário 
+(caso tenha).
 
 | Campo | Tipo |
 | --- | --- |
@@ -275,166 +289,112 @@ no sistema.
 | foto | `string` |
 | localizacao | `string` |
 | valorDiaria | `number` |
-| status | `'livre' \| 'ocupado' \| 'manutencao'` |
-
-**3. Interface de Reserva (`ReservaType`)** Representa a reserva de um imóvel 
-por um usuário.
-
-| Campo | Tipo |
-| --- | --- |
-| id | `string` |
-| usuarioId | `string` |
-| imovelId | `string` |
-| dataCheckIn | `string` |
-| dataCheckOut | `string` |
-| valorTotal | `number` |
-| status | `'pendente' \| 'confirmada' \| 'cancelada' \| 'concluida'` |
+| status | `'livre' | 'ocupado' | 'manutencao'` |
 
 ---
+## Mapeamento de Rotas (Públicas e Privadas)
 
-## Mapeamento de Rotas
+Para garantir a segurança das informações e a correta fluidez da navegação, o sistema divide o acesso às páginas em dois grupos. A proteção das rotas privadas é feita no lado do cliente (Client-side) através do monitoramento do `AuthContext`.
 
-As páginas se dividem em dois grupos: públicas e privadas. Rotas privadas são 
-protegidas no lado do cliente via `AuthContext`. Se alguém tentar acessar uma 
-URL protegida sem sessão, o `useEffect` da página detecta e chama `router.push` 
-redirecionando para a home ou login antes de qualquer coisa ser renderizada.
+Se um usuário não autenticado tentar acessar uma URL protegida diretamente pelo navegador, ele será interceptado e redirecionado automaticamente para a página inicial ou de login.
 
 ### Rotas Públicas
+Páginas abertas para qualquer visitante. Não exigem sessão ativa no `localStorage`.
 
-Sem requisito de sessão. Qualquer visitante acessa.
+* **`/` (Home):** Página inicial. Vitrine onde ficam expostos os imóveis e o botão para abrir o modal de acesso.
+* **`/sobre`:** Página institucional com informações sobre a plataforma.
+* **`/autenticacao/login`:** Rota direta para o formulário de login.
+* **`/autenticacao/cadastro`:** Rota direta para o formulário de criação de conta.
 
-- **`/`** — Página inicial com a listagem de imóveis e o modal de acesso.
-- **`/autenticacao/login`** — Formulário de login.
-- **`/autenticacao/cadastro`** — Formulário de criação de conta.
+### Rotas Privadas (Protegidas)
+Área restrita. Apenas usuários logados (com o status `estaAutenticado === true` no Contexto) podem acessar. O componente `useEffect` dessas páginas monitora a sessão e realiza o redirecionamento (`router.push`) caso o usuário não tenha permissão.
 
-### Rotas Privadas
-
-Exigem `estaAutenticado === true` no contexto. Acesso direto pela URL sem sessão 
-ativa resulta em redirecionamento imediato.
-
-- **`/usuario`** — Rota raiz privada que automaticamente redireciona o usuário 
-para seu painel individual.
-- **`/usuario/[perfil]`** — Dashboard com os dados pessoais do usuário, menu de navegação e atalhos rápidos.
-- **`/usuario/[perfil]/historico`** — Histórico de reservas (concluídas, futuras, 
-canceladas).
-- **`/usuario/[perfil]/imovel-usuario`** — Área do proprietário: lista os imóveis 
-do usuário, com sub-rotas para criar um anúncio (`.../novo`) e editar um existente (`.../[slug]/editor`).
+* **`/gerenciamento-usuario`:** Página de configuração/gerenciamento de conta do usuário.
+* **`/usuario`:** Ponto de entrada para o ecossistema do usuário logado (renderiza o layout com a Sidebar).
+* **`/usuario/[perfil]`:** Dashboard principal do usuário logado, exibindo seus dados pessoais.
+* **`/usuario/[perfil]/historico`:** Tabela com o histórico de estadias/reservas (concluídas, futuras ou canceladas).
+* **`/usuario/[perfil]/imoveis` (e sub-rotas):** Área do proprietário. Inclui a listagem dos próprios imóveis, a rota para criar um novo anúncio (`.../imoveis/novo`) e a rota para editar um imóvel existente (`.../imoveis/[slug]/editor`).
 ---
+### Arquitetura: Fluxo de Cadastro (Pai e Filho)
 
-### Arquitetura: Fluxo de Cadastro
+**Padrão Utilizado:** Smart Components (Páginas) vs. Dumb Components (Formulários).
 
-**Padrão:** Smart Components (páginas) vs. Dumb Components (formulários). 
-O formulário só sabe validar e exibir; a lógica de negócio fica na página.
+**Objetivo:** Separar responsabilidades visuais/validação das regras de 
+negócio e persistência de dados.
 
-### Atores
+### Atores do Fluxo
 
-1. **`cadastro-form.tsx` (filho)** — UI e validação de formato com Zod + 
-React Hook Form.
-2. **`src/app/autenticacao/cadastro/page.tsx` (pai)** — regra de negócio, 
-mock e roteamento.
+1. **Componente Filho (`cadastro-form.tsx`):** Responsável estritamente pela Interface do Usuário (UI) e validação de formato de dados (Zod + React Hook Form).
+2. **Página Pai (`src/app/autenticacao/cadastro/page.tsx`):** Responsável pela regra de negócio, integração com banco de dados/mocks e roteamento.
 
-### Fluxo
+### Workflow Passo a Passo
 
-**1. Inicialização**
-
-A página pai injeta `processarCadastro` no filho via prop `aoEnviar`. O formulário 
-não sabe o que essa função faz, só sabe que vai chamá-la quando os dados 
-estiverem prontos.
-
-**2. Interação do usuário**
-
-O usuário preenche Nome, E-mail, Telefone, CPF e Senha e clica em "Cadastrar".
-
-**3. Validação (Zod)**
-
-O React Hook Form valida contra o schema Zod antes de qualquer coisa. 
-E-mail sem `@`, senha curta; o fluxo para e os erros aparecem no formulário. 
-Se passar, segue.
-
-**4. Callback**
-
-O filho chama `aoEnviar(dados_limpos)`. O formulário saiu do fluxo. Os dados 
-estão com o pai.
-
-**5. Regra de negócio**
-
-`processarCadastro` consulta o `hospedesMock` pelo CPF:
-- CPF já existe emite alerta de duplicidade, encerra.
-- CPF novo gera `id` único e monta o objeto `HospedeType`.
-
-**6. Persistência e feedback**
-
-Salva no `localStorage`, confirma o sucesso para o usuário e redireciona 
-para `/autenticacao/login`.
+- **Passo 1: Inicialização (Renderização)**
+    - A **Página Pai** é carregada no navegador do usuário.
+    - Ela injeta sua regra de negócio (a função `processarCadastro`) para dentro do **Componente Filho** através de uma propriedade (`prop` chamada `aoEnviar`).
+    - Ao ser injetada ele aplica a regra de busca por CPF, se o CPF nao existe, salvo o dado novo no mock, caso CPF exista, nao salva.
+- **Passo 2: Interação do Usuário**
+    - O usuário preenche os dados (Nome, E-mail, Telefone, CPF e Senha) no **Componente Filho**.
+    - Ao clicar no botão "Cadastrar", o evento de submissão é disparado.
+- **Passo 3: Validação de Front-end (Zod)**
+    - O motor do React Hook Form, utilizando o esquema do Zod, intercepta os dados dentro do **Componente Filho**.
+    - **Se os dados forem inválidos** (ex: e-mail sem '@', senha curta): O fluxo é interrompido aqui mesmo. O componente desenha as mensagens de erro visuais na tela. A Página Pai nem fica sabendo que isso aconteceu.
+    - **Se os dados forem válidos**: O fluxo avança para a próxima etapa.
+- **Passo 4: Elevação dos Dados (Callback)**
+    - O **Componente Filho** empacota os dados já limpos e validados e executa a prop `aoEnviar(dados_limpos)`.
+    - Neste momento, a responsabilidade do formulário termina. Os dados "sobem" para a **Página Pai**.
+- **Passo 5: Regras de Negócio (Página Pai)**
+    - A função `processarCadastro` (que mora na Página Pai) assume o controle recebendo os dados limpos.
+    - Ela realiza a busca no Mock (`hospedesMock`) para verificar se já existe um usuário com aquele CPF cadastrado.
+        - *Cenário Negativo:* Se o CPF existir, emite um alerta de duplicidade e interrompe a execução.
+        - *Cenário Positivo:* Se o CPF for novo, gera um identificador único (`id`) e monta o objeto final no formato da interface `HospedeType`.
+- **Passo 6: Persistência e Feedback**
+    - A **Página Pai** salva o novo objeto no banco de dados simulado (Mock array) ou no `localStorage` do navegador.
+    - Por fim, dispara um aviso de sucesso para o usuário e o redireciona automaticamente para a rota de Login (`/autenticacao/login`).
 ---
-
 ## Lógica de Autenticação e Fluxo do Usuário
 
-O projeto é só front-end, não há backend real. A autenticação usa uma sessão 
-simulada via `AuthContext` (Context API) e `localStorage`.
+Como o projeto atual foca exclusivamente no Front-end, a autenticação não se comunica com um Back-end real. Em vez disso, ela utiliza uma **sessão simulada** gerenciada pelo `AuthContext` (Context API) e pelo `localStorage` do navegador.
 
-### 1. `AuthContext.tsx`
+Abaixo está o passo a passo detalhado de como esse fluxo funciona de ponta a ponta:
 
-O contexto central da sessão. Na inicialização, verifica se há usuário salvo 
-no `localStorage`. Expõe `usuarioLogado`, `estaAutenticado`, `login()` 
-e `logout()` para qualquer componente via `useAuth()`.
+### 1. O Motor da Sessão: `AuthContext.tsx`
 
-### 2. `NavbarGeral`
+O `AuthContext` atua como o cérebro da aplicação no que diz respeito ao usuário.
 
-A navbar se adapta ao status da sessão, mas tem um problema para contornar 
-primeiro: o Next.js renderiza no servidor, onde `localStorage` não existe, 
-e isso causaria hydration mismatch. A solução é um estado `montado` 
-via `useEffect(() => setMontado(true), [])` o componente só exibe o estado 
-correto depois que o cliente monta.
+- Ao carregar a aplicação, ele verifica se existe um usuário salvo no `localStorage` do navegador.
+- Ele provê variáveis e funções globais, como `usuarioLogado`, `estaAutenticado`, `login()` e `logout()`.
+- Qualquer componente no sistema pode "escutar" esse contexto usando o hook customizado `useAuth()`.
 
-Depois disso: `estaAutenticado === false` mostra "Acessar Conta"; `true` 
-mostra "Painel do Usuário" com link para `/usuario/[perfil]`.
+### 2. A Porta de Entrada: `NavbarGeral`
 
-### 3. `autenticacao.tsx`
+A barra de navegação principal (`navbar-geral.tsx`) é dinâmica e se adapta ao status do usuário.
 
-"Acessar Conta" abre um modal que alterna entre `login-form.tsx` e 
-`cadastro-form.tsx`. Os dois usam React Hook Form + Zod. CPF incompleto 
-ou e-mail inválido bloqueiam o envio e exibem os erros na hora, sem recarregar nada.
+- **Prevenção de Hydration Mismatch:** Como o Next.js renderiza a página primeiro no servidor (onde não existe `localStorage`), a Navbar usa um estado de `montado` (`useEffect(() => setMontado(true), [])`). Isso garante que a renderização do servidor e do cliente sejam idênticas nos primeiros milissegundos, evitando erro do Next.js.
+- **Comportamento Dinâmico:** Se `estaAutenticado` for `false`, a Navbar exibe o botão **"Acessar Conta"**.
+  - Se `estaAutenticado` for `true`, o botão se transforma magicamente no botão **"Painel do Usuário"** (com link direto para `/usuario/[perfil]`).
 
-No login, os dados batem contra `mockUsuario.ts` via `.find()`. CPF e senha 
-corretos: `login()` é chamado, os dados vão para o `localStorage`, o modal 
-fecha e a navbar atualiza.
+### 3. O Pop-up de Autenticação: `autenticacao.tsx`
 
-### 4. Proteção de Rotas
+Quando o usuário deslogado clica em "Acessar Conta", um pop-up é aberto sobrepondo a tela.
 
-Páginas em `/usuario/...` têm um `useEffect` monitorando `estaAutenticado`. 
-Sem sessão ativa, `router.push("/")` ou `router.push("/autenticacao/login")` 
-dispara antes de qualquer dado ser exibido.
+- Esse modal controla qual formulário exibir: `login-form.tsx` ou `cadastro-form.tsx`.
+- **Validação:** Ambos os formulários utilizam `React Hook Form` combinado com `Zod`. Se o usuário digitar um CPF incompleto ou e-mail inválido, o `Zod` bloqueia o envio e exibe os erros instantaneamente, sem recarregar a página.
+- **Simulação de Login:** No `login-form.tsx`, ao enviar os dados válidos, o sistema realiza uma busca (método `.find()`) no arquivo estático `mockUsuario.ts`.
+- Se o CPF e a senha baterem, a função `login()` do contexto é chamada, os dados são gravados no `localStorage`, e o modal se **fecha automaticamente**. A Navbar então é atualizada na mesma hora.
 
-### 5. Painel do Usuário e Sidebar
+### 4. Proteção de Rotas (Redirecionamento)
 
-A rota `/usuario` tem um layout aninhado (`/usuario/layout.tsx`) compartilhado 
-pelas páginas filhas. Nele fica a `navbar-usuario.tsx`: sidebar fixa à esquerda 
-com links para "Perfil", "Histórico de Hospedagens" e "Imóveis" (com dropdown 
-em cascata).
+Páginas que exigem login, como as pagina internas de `/usuario/...`, possuem uma camada de proteção nativa do React.
 
-Nas páginas dinâmicas como `/usuario/[perfil]/page.tsx`, o ID vem da URL. 
-Como o Next.js moderno expõe `params` como Promise, o acesso é feito com 
-`React.use(params)`.
+- Ao acessar essas páginas, um `useEffect` monitora a variável `estaAutenticado` do `AuthContext`.
+- Se o sistema detectar que o usuário não está logado, a função `router.push("/autenticacao/login")` ou `router.push("/")` é acionada, "expulsando" o visitante da área restrita antes que ele veja dados sensíveis.
 
-"Sair" chama `logout()`, limpa o `localStorage` e redireciona para a home.
+### 5. O Painel do Usuário e a Barra Lateral: `navbar-usuario.tsx`
 
----
-## Lógica de Busca e Filtragem de Reservas
+Ao clicar no botão "Painel do Usuário" na Navbar principal, o fluxo entra na estrutura aninhada da rota `/usuario`.
 
-A disponibilidade é calculada inteira no front-end, sem chamada a nenhum backend.
-
-1. **Filtro por status:** A Home começa ocultando tudo que não tem 
-`status === 'livre'`. Imóveis em manutenção ou ocupados saem da lista 
-antes de qualquer busca.
-2. **Seleção de datas:** Check-in e check-out vêm do 
-`react-tailwindcss-datepicker`. O componente precisou de uma 
-compatibilização manual com o Tailwind CSS v4 — resolvida via diretivas 
-no `globals.css`.
-3. **Cruzamento com reservas:** Datas selecionadas? O sistema cruza os IDs 
-dos imóveis com `reservasMock`.
-4. **Regra de sobreposição:** Reservas `canceladas` ou `concluidas` são ignoradas. 
-O imóvel é marcado como indisponível quando 
-`Check-in Selecionado < Check-out da Reserva` **e** 
-`Check-out Selecionado > Check-in da Reserva` — a condição clássica de overlap 
-de intervalos. Se bater, some da listagem.
+- **Layout Aninhado (`/usuario/layout.tsx`):** O Next.js permite que todas as páginas dentro de `/usuario` compartilhem um mesmo escopo visual. É aqui que a **Sidebar (Barra Lateral)** exclusiva do usuário (`navbar-usuario.tsx`) é inserida.
+- Essa Sidebar carrega links específicos como "Perfil", "Histórico de Hospedagens" e a aba de "Imóveis" (com seu dropdown em cascata), mantendo-se fixa à esquerda enquanto o conteúdo muda à direita.
+- **Desempacotamento de Parâmetros:** Nas páginas dinâmicas como `/usuario/[perfil]/page.tsx`, o ID do perfil é lido diretamente da URL. Como no Next.js moderno os `params` são *Promises*, o hook `React.use(params)` é aplicado para acessar corretamente qual usuário mockado deve ter suas informações (nome, e-mail, e propriedades) desenhadas na tela.
+- **Fim da Sessão:** A qualquer momento, o usuário pode clicar em "Sair", disparando a função `logout()`, limpando o `localStorage` e sendo redirecionado de volta para a Home.

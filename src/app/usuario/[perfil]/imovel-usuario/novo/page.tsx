@@ -2,58 +2,55 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { ImovelForm, ImovelFormInputs} from "@/src/modules/imovel-form";
+import { ImovelForm, ImovelFormInputs} from "@/src/modules/components/imovel-form";
 import { Button } from "@/components/ui/button";
-// import { ChevronLeft } from "lucide-react";
+import {usuariosMock} from "@/src/modules/components/usuario/mock/mockUsuario";
 
 export default function AddImovelPage({ params }: { params: Promise<{ perfil: string }> }) {
     const router = useRouter();
 
-    // 1. Capturar o Parâmetro: Extraímos o ID do utilizador (perfil)
+    // extrai o id do usuario
     const { perfil } = use(params);
 
-    // 2. Lógica de Cadastro
+    // cadasttro
     const lidarComCadastro = (dadosVindosDoForm: ImovelFormInputs) => {
-        // Criamos o objeto final do imóvel
+        // objeto de imovel
         const novoImovel = {
-            id: `imovel-${Date.now()}`, // Geramos um ID único temporário baseado no timestamp
-            usuarioId: perfil,           // Vinculamos ao dono (ID da URL)
-            ...dadosVindosDoForm         // Espalhamos os dados (titulo, foto, valor, etc)
+            id: `imovel-${Date.now()}`, // id gerado com base em timestamp
+            usuarioId: perfil,           // vincula ao dono
+            ...dadosVindosDoForm         // espalha dados
         };
 
-        // Simulação de persistência
+        // simulacao de insercao de dados
         console.log("Novo imóvel criado com sucesso:", novoImovel);
 
-        // No futuro, aqui você faria:
-        // usuariosMock.find(u => u.id === perfil).imovel-usuario.push(novoImovel);
-
+        // nao atualiza o mock, pois mock eh um array estatico
+        // usuariosMock.find(u => u.id === perfil)?.imoveis.push(novoImovel);
         alert("Imóvel cadastrado com sucesso!");
 
-        // Redirecionamos para a lista de imóveis do utilizador
+        // retorna para lista de imoveis do usuario
         router.push(`/usuario/${perfil}/imoveis`);
     };
 
     return (
         <div className="p-8 max-w-4xl mx-auto">
-            {/* Botão de Voltar */}
+            {/* voltar */}
             <Button
                 variant="ghost"
                 className="mb-4 -ml-4 text-gray-500 hover:text-gray-900"
-                onClick={() => router.back()}
-            >
-                {/*<ChevronLeft className="w-4 h-4 mr-1" />*/}
+                onClick={() => router.back()}>
                 Voltar para a lista
             </Button>
 
             <header className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">Anunciar Novo Imóvel</h1>
                 <p className="text-gray-500 mt-1">
-                    Preencha os dados abaixo para disponibilizar sua propriedade para aluguer.
+                    Preencha os dados abaixo para disponibilizar sua propriedade para aluguel.
                 </p>
             </header>
 
             <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                {/* 3. Renderização do Formulário */}
+                {/* formulario de cadastro e imovel */}
                 <ImovelForm
                     textoBotao="Cadastrar Propriedade"
                     aoEnviar={lidarComCadastro}

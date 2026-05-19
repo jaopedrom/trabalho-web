@@ -6,19 +6,16 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 
-// 1. Schema Corrigido
 const imovelSchema = z.object({
     titulo: z.string().min(3, "O título precisa ter pelo menos 3 caracteres"),
     foto: z.string().url("Insira uma URL de imagem válida"),
     localizacao: z.string().min(5, "A localização é obrigatória"),
 
-    // CORREÇÃO 1: Usamos apenas z.number() sem coerce, o RHF fará a conversão
     valorDiaria: z.number({
         required_error: "O valor da diária é obrigatório",
         invalid_type_error: "Digite um valor numérico válido",
     }).min(1, "O valor deve ser maior que zero"),
 
-    // CORREÇÃO 2: Propriedades corretas para mensagens de erro no enum
     status: z.enum(["livre", "ocupado", "manutencao"], {
         required_error: "O status é obrigatório",
         invalid_type_error: "Selecione um status válido",
@@ -90,7 +87,6 @@ export function ImovelForm({ aoEnviar, valoresIniciais, textoBotao = "Salvar" }:
                         placeholder="0.00"
                         type="number"
                         step="0.01"
-                        // CORREÇÃO 3: Avisamos ao register para converter o texto do input em número
                         {...register("valorDiaria", { valueAsNumber: true })}
                     />
                     {errors.valorDiaria && <p className="text-red-500 text-xs">{errors.valorDiaria.message}</p>}

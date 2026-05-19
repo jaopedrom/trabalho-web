@@ -2,23 +2,21 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-// import { usuariosMock } from "@/src/mocks/usuariosMock";
 import { usuariosMock } from "@/src/modules/components/usuario/mock/mockUsuario";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-// import { MapPin, DollarSign, Info } from "lucide-react";
 
 export default function ImovelDetalhes({ params }: { params: Promise<{ perfil: string, slug: string }> }) {
     const router = useRouter();
 
-    // 1. Desempacotar os parâmetros da URL (usuário e imóvel)
+    // desempacotamento de parametros
     const { perfil, slug } = use(params);
 
-    // 2. Buscar o usuário dono e, dentro dele, o imóvel específico
+    // busca de dados
     const usuarioDono = usuariosMock.find((u) => u.id === perfil);
     const imovel = usuarioDono?.imoveis.find((i) => i.id === slug);
 
-    // Proteção: Caso o link esteja quebrado ou o ID não exista
+    // caso o link esteja quebrado ou o ID não exista
     if (!imovel) {
         return (
             <div className="p-8 flex flex-col items-center justify-center min-h-[50vh]">
@@ -32,19 +30,17 @@ export default function ImovelDetalhes({ params }: { params: Promise<{ perfil: s
 
     return (
         <div className="p-8 max-w-6xl mx-auto">
-            {/* Botão Superior de Voltar */}
             <Button
                 variant="ghost"
                 className="mb-6 -ml-4 text-gray-500 hover:text-gray-900 transition-colors"
                 onClick={() => router.back()}
             >
-                {/*<ChevronLeft className="w-4 h-4 mr-1" />*/}
                 Voltar para a listagem
             </Button>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 
-                {/* COLUNA ESQUERDA: Galeria/Imagem Principal */}
+                {/* imagem */}
                 <div className="relative aspect-video lg:aspect-square rounded-3xl overflow-hidden shadow-2xl border border-gray-200 bg-gray-100">
                     <img
                         src={imovel.foto}
@@ -61,17 +57,16 @@ export default function ImovelDetalhes({ params }: { params: Promise<{ perfil: s
                     </div>
                 </div>
 
-                {/* COLUNA DIREITA: Informações e Ações */}
+                {/* infos do imovel */}
                 <div className="flex flex-col py-4">
                     <h1 className="text-4xl font-black text-gray-900 mb-6 leading-tight">
                         {imovel.titulo}
                     </h1>
 
                     <div className="space-y-8">
-                        {/* Seção: Localização */}
+                        {/* loc */}
                         <div className="flex items-start gap-4">
                             <div className="p-3 bg-blue-100 rounded-xl text-blue-700">
-                                {/*<MapPin className="w-6 h-6" />*/}
                             </div>
                             <div>
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Localização</p>
@@ -79,10 +74,9 @@ export default function ImovelDetalhes({ params }: { params: Promise<{ perfil: s
                             </div>
                         </div>
 
-                        {/* Seção: Preço */}
+                        {/* preco */}
                         <div className="flex items-start gap-4">
                             <div className="p-3 bg-green-100 rounded-xl text-green-700">
-                                {/*<DollarSign className="w-6 h-6" />*/}
                             </div>
                             <div>
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Valor da Diária</p>
@@ -93,9 +87,8 @@ export default function ImovelDetalhes({ params }: { params: Promise<{ perfil: s
                             </div>
                         </div>
 
-                        {/* Seção: Info de Status */}
+                        {/* status */}
                         <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100">
-                            {/*<Info className="w-6 h-6 text-gray-400 mt-1" />*/}
                             <div>
                                 <p className="text-sm font-semibold text-gray-900 mb-1">Status da Propriedade</p>
                                 <p className="text-sm text-gray-600 leading-relaxed">
@@ -109,7 +102,7 @@ export default function ImovelDetalhes({ params }: { params: Promise<{ perfil: s
                         </div>
                     </div>
 
-                    {/* Ações Inferiores */}
+                    {/* acoes */}
                     <div className="mt-12 flex flex-col sm:flex-row gap-4">
                         <Button className="flex-1 h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-100 transition-all active:scale-95">
                             Realizar Reserva

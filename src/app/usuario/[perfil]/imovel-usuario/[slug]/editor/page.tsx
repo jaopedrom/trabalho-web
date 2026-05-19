@@ -2,26 +2,21 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-// Ajuste os caminhos de importação conforme a sua estrutura
-// import { usuariosMock } from "@/src/mocks/usuariosMock";
-import { usuariosMock } from "@/src/modules/components/usuario/mock/mockUsuario";
-// import { ImovelForm, ImovelFormInputs } from "@/src/components/ImovelForm";
-import { ImovelForm, ImovelFormInputs} from "@/src/modules/imovel-form";
+import { imoveisMock } from "@/src/modules/components/imoveis/mocks/imoveisMock";
+import { ImovelForm, ImovelFormInputs} from "@/src/modules/components/imovel-form";
 import { Button } from "@/components/ui/button";
-// import { ChevronLeft } from "lucide-react"; // Opcional: ícone de voltar
 
 
 export default function AttImovel({ params }: { params: Promise<{ perfil: string, slug: string }> }) {
     const router = useRouter();
 
-    // 1. Capturar os Parâmetros: Extraímos o ID do utilizador (perfil) e o ID do imóvel (slug)
+    // capturar os parametros, ID do usuario e o ID do imóvel sao extraidos
     const { perfil, slug } = use(params);
 
-    // 2. Localizar os Dados Atuais
-    const usuarioDono = usuariosMock.find(u => u.id === perfil);
-    const imovelParaEditar = usuarioDono?.imoveis.find(i => i.id === slug);
+    // encontrar dados
+    const imovelParaEditar = imoveisMock.find(i => i.id === slug && i.usuarioId === perfil);
 
-    // Proteção: Se o imóvel não existir (ex: ID errado na URL)
+    // caso imovel nao exista
     if (!imovelParaEditar) {
         return (
             <div className="p-8 flex flex-col items-center">
@@ -33,34 +28,31 @@ export default function AttImovel({ params }: { params: Promise<{ perfil: string
         );
     }
 
-    // 3. Lógica de Submissão
+    // submissao
     const lidarComAtualizacao = (dadosVindosDoForm: ImovelFormInputs) => {
-        // Aqui montamos o objeto completo para a atualização
+        //objeto eh montado completo para a atualização
         const imovelAtualizado = {
-            id: slug,           // Mantemos o ID original (slug)
-            usuarioId: perfil,  // Mantemos o dono original (recuperado da URL)
-            ...dadosVindosDoForm // Inserimos as novas informações do formulário
+            id: slug,           // mantem o ID original
+            usuarioId: perfil,  // mantem o dono original (recuperado da URL)
+            ...dadosVindosDoForm // inserido as novas informações do formulário
         };
 
-        // Simulação da atualização no Mock
+        // atualizacao do mock simulada
         console.log("Objeto pronto para persistência:", imovelAtualizado);
 
-        // Feedback ao utilizador
         alert("As alterações foram guardadas com sucesso!");
 
-        // Redirecionamos de volta para a página de listagem de imóveis do utilizador
-        router.push(`/usuario/${perfil}/imoveis`);
+        // redireciona para a pagina de imoveis do usuario
+        router.push(`/usuario/${perfil}/imovel-usuario/`);
     };
 
     return (
         <div className="p-8 max-w-4xl mx-auto">
-            {/* Botão de Voltar */}
             <Button
                 variant="ghost"
                 className="mb-4 -ml-4 text-gray-500 hover:text-gray-900"
                 onClick={() => router.back()}
             >
-                {/*<ChevronLeft className="w-4 h-4 mr-1" />*/}
                 Voltar
             </Button>
 
@@ -72,10 +64,9 @@ export default function AttImovel({ params }: { params: Promise<{ perfil: string
             </header>
 
             <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                {/* 4. Renderização do Formulário */}
                 <ImovelForm
                     textoBotao="Guardar Alterações"
-                    // Passamos os dados atuais para o formulário já abrir preenchido
+                    // dados atuais para o formulário ja abrir preenchido
                     valoresIniciais={imovelParaEditar}
                     aoEnviar={lidarComAtualizacao}
                 />
