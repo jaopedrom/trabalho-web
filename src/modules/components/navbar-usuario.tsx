@@ -29,7 +29,6 @@ export function MenubarDemo() {
         return <div className="p-4 text-sm text-gray-400">Carregando menu...</div>;
     }
 
-    // variáveis auxiliares
     // baseUrl: cria a raiz da URL dinamica (ex: "/usuario/123")
     const baseUrl = `/usuario/${usuarioLogado.id}`;
 

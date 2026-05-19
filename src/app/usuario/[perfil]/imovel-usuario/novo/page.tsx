@@ -2,9 +2,8 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { ImovelForm, ImovelFormInputs} from "@/src/modules/components/imovel-form";
+import { ImovelForm, ImovelFormInputs } from "@/src/modules/components/imovel-form";
 import { Button } from "@/components/ui/button";
-import {usuariosMock} from "@/src/modules/components/usuario/mock/mockUsuario";
 
 export default function AddImovelPage({ params }: { params: Promise<{ perfil: string }> }) {
     const router = useRouter();
@@ -29,7 +28,7 @@ export default function AddImovelPage({ params }: { params: Promise<{ perfil: st
         alert("Imóvel cadastrado com sucesso!");
 
         // retorna para lista de imoveis do usuario
-        router.push(`/usuario/${perfil}/imoveis`);
+        router.push(`/usuario/${perfil}/imovel-usuario`);
     };
 
     return (
