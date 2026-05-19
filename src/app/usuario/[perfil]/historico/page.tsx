@@ -1,31 +1,41 @@
-// Diretiva obrigatória no Next.js (App Router) quando usamos hooks (useState, useEffect, use, etc) 
-// ou eventos do navegador. Indica que este código será executado do lado do cliente.
 "use client"
 
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, use } from "react";
+import { reservasMock } from "@/src/modules/components/reserva/mocks/reserva-mock";
+import { imoveisMock } from "@/src/modules/components/imoveis/mocks/imoveisMock";
+import HospedagensUsuario, { ImoveisHospedagem } from "@/src/modules/components/tabela-historico";
 
-// interface define que 'params' é uma Promise
 // para rotas dinâmicas como /historico/[perfil]
 export default function HistoricoPage({ params }: { params: Promise<{ perfil: string }> }) {
     // verifica se o usuário esta logado
     const { estaAutenticado } = useAuth();
 
-    // instancia o roteador do Next.js para permitir redirecionamentos
+    // instancia o roteador do next
     const router = useRouter();
 
-    // usamos o hook 'use()' do React para "abrir" a Promise e ler o valor de { perfil } de forma síncrona.
+    // desempacotamento do params
     const unwrappedParams = use(params);
 
-    // protecap de rota
-    // observa a variável 'estaAutenticado' assim que a tela carrega,
-    // se o usuario nao estiver logado, ele é redirecionado para a pagina inicial "/".
+    // proteção de rota, se o usuario nao estiver logado, ele é redirecionado para a pagina inicial
     useEffect(() => {
         if (!estaAutenticado) {
             router.push("/");
         }
     }, [estaAutenticado, router]);
+
+    // busca e uniao dos dados das reservas do usuario com informacoes dos imoveis
+    const reservasUsuario: ImoveisHospedagem[] = reservasMock
+        .filter((reserva) => reserva.usuarioId === unwrappedParams.perfil)
+        .map((reserva) => {
+            const imovel = imoveisMock.find(i => i.id === reserva.imovelId);
+
+            return {
+                ...reserva,
+                imovel: imovel
+            };
+        });
 
     return (
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border border-gray-100 p-6 mt-8">
@@ -36,16 +46,20 @@ export default function HistoricoPage({ params }: { params: Promise<{ perfil: st
                     Histórico de Hospedagens
                 </h1>
                 <p className="text-gray-600 mt-1">
-                    {/* parâmetro dinâmico da URL que foi extraído se a URL for /usuario/123/historico, ele vai exibir "123". */}
+                    {/* parâmetro dinamico da URL que foi extraído */}
                     Visualizando o histórico do usuário ID: <span className="font-mono bg-gray-100 px-2 py-1 rounded text-sm">{unwrappedParams.perfil}</span>
                 </p>
             </div>
 
-            {/* Área de conteúdo "vazio" (Empty State) map do array de histórico no futuro usando .map() */}
-            <div className="bg-gray-50 p-8 rounded-lg text-center border border-dashed border-gray-300">
-                <p className="text-gray-500 font-medium">Nenhuma hospedagem encontrada no histórico.</p>
-                <p className="text-sm text-gray-400 mt-2">As viagens futuras e passadas aparecerão aqui.</p>
-            </div>
+            {/* exibe a tabela se houver reservas, caso contrario mostra um estado vazio */}
+            {reservasUsuario.length > 0 ? (
+                <HospedagensUsuario reservas={reservasUsuario} />
+            ) : (
+                <div className="bg-gray-50 p-8 rounded-lg text-center border border-dashed border-gray-300">
+                    <p className="text-gray-500 font-medium">Nenhuma hospedagem encontrada no histórico.</p>
+                    <p className="text-sm text-gray-400 mt-2">As viagens futuras e passadas aparecerão aqui.</p>
+                </div>
+            )}
 
         </div>
     );
