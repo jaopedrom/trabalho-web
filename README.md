@@ -275,7 +275,20 @@ no sistema.
 | foto | `string` |
 | localizacao | `string` |
 | valorDiaria | `number` |
-| status | `'livre' | 'ocupado' | 'manutencao'` |
+| status | `'livre' \| 'ocupado' \| 'manutencao'` |
+
+**3. Interface de Reserva (`ReservaType`)** Representa a reserva de um imóvel 
+por um usuário.
+
+| Campo | Tipo |
+| --- | --- |
+| id | `string` |
+| usuarioId | `string` |
+| imovelId | `string` |
+| dataCheckIn | `string` |
+| dataCheckOut | `string` |
+| valorTotal | `number` |
+| status | `'pendente' \| 'confirmada' \| 'cancelada' \| 'concluida'` |
 
 ---
 
@@ -299,10 +312,9 @@ Sem requisito de sessão. Qualquer visitante acessa.
 Exigem `estaAutenticado === true` no contexto. Acesso direto pela URL sem sessão 
 ativa resulta em redirecionamento imediato.
 
-- **`/gerenciamento-usuario`** — Configurações da conta.
-- **`/usuario`** — Entrada da área logada; renderiza o layout com sidebar e 
-configurações da conta
-- **`/usuario/[perfil]`** — Dashboard com os dados pessoais do usuário.
+- **`/usuario`** — Rota raiz privada que automaticamente redireciona o usuário 
+para seu painel individual.
+- **`/usuario/[perfil]`** — Dashboard com os dados pessoais do usuário, menu de navegação e atalhos rápidos.
 - **`/usuario/[perfil]/historico`** — Histórico de reservas (concluídas, futuras, 
 canceladas).
 - **`/usuario/[perfil]/imovel-usuario`** — Área do proprietário: lista os imóveis 
