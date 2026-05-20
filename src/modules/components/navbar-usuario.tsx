@@ -9,7 +9,7 @@ export function MenubarDemo() {
     // uso do Contexto, extrai os dados do usuário e a função de logout do nosso contexto global.
     const { usuarioLogado, logout } = useAuth();
 
-    // Como a Navbar depende do localStorage (que só existe no navegador),
+    // Como a Navbar depende do localStorage (que só existe no navegador)
     // comeca com o componente "desmontado" no servidor.
     const [montado, setMontado] = React.useState(false);
 

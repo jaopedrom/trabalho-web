@@ -2,13 +2,12 @@
 import * as React from 'react';
 import { Button } from '@base-ui/react/button';
 
-// 1. Definimos a "planta baixa" das propriedades que o botão aceita
+// propriedades que o botão aceita
 interface CustomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    children: React.ReactNode; // O texto ou ícone que vai dentro do botão
-    loading?: boolean;         // Estado de carregamento opcional
+    children: React.ReactNode; // texto ou ícone que vai no botão
+    loading?: boolean;         // estado de carregamento opcional
 }
 
-// 2. O Componente Burro (Stateless)
 export default function CustomButton({
                                          children,
                                          loading = false,

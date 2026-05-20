@@ -61,7 +61,6 @@ export default function NavbarGeral() {
                         (logadoLocalStorage || estaAutenticado) && usuarioLogado ? (
 
                             // se sim, renderiza um botao que leva para a rota dinâmica do perfil dele
-                            // Template Literals (Crase ` ` e ${}) para injetar o ID do usuario na URL
                             // se o ID for "123", o link vira "/usuario/123".
                             <Link
                                 className="box-border flex items-center justify-center gap-1.5 h-10 px-3.5 m-0 outline-none border-none rounded-md bg-gray-800 text-white text-base font-normal leading-6 select-none no-underline hover:bg-black transition-colors"

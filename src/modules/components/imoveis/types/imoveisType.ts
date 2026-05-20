@@ -1,6 +1,6 @@
 export interface ImovelType {
     id: string;
-    usuarioId: string; // Atualizado de locadorId para usuarioId
+    usuarioId: string;
     titulo: string;
     foto: string;
     localizacao: string;

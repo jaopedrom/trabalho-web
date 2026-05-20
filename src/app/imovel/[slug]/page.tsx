@@ -6,26 +6,24 @@ import { usuariosMock } from "@/src/modules/components/usuario/mock/mockUsuario"
 import { imoveisMock } from "@/src/modules/components/imoveis/mocks/imoveisMock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-// import { ChevronLeft, MapPin, DollarSign, User, Calendar, Home } from "lucide-react";
 
 export default function ImovelPublicoDetalhes({ params }: { params: Promise<{ slug: string }> }) {
     const router = useRouter();
 
-    // 1. Desempacotar o parâmetro da URL (ID do imóvel)
+    // desempacotar o parâmetro da URL (ID do imóvel)
     const { slug } = use(params);
 
-    // DEBUG: Ver o que está chegando
-    console.log("=== DEBUG ===");
+    // debug
     console.log("Slug recebido:", slug);
     console.log("Total de imóveis no mock:", imoveisMock.length);
     console.log("IDs disponíveis:", imoveisMock.map(i => i.id));
 
-    // 2. Busca o imóvel no mock de imóveis
+    // busco de imóvel no mock de imóveis
     const imovelEncontrado = imoveisMock.find((imovel) => imovel.id === slug);
 
     console.log("Imóvel encontrado:", imovelEncontrado);
 
-    // 3. Se encontrou o imóvel, busca o dono pelo usuarioId
+    // imovel encontrado, busca o dono pelo usuarioId
     const donoDoImovel = imovelEncontrado
         ? usuariosMock.find((usuario) => usuario.id === imovelEncontrado.usuarioId)
         : null;
@@ -33,7 +31,7 @@ export default function ImovelPublicoDetalhes({ params }: { params: Promise<{ sl
     console.log("Dono encontrado:", donoDoImovel);
     console.log("=== FIM DEBUG ===");
 
-    // Proteção: se o imóvel não existir
+    // protecao caso nao tenha imovel
     if (!imovelEncontrado || !donoDoImovel) {
         return (
             <div className="p-8 flex flex-col items-center justify-center min-h-[60vh]">

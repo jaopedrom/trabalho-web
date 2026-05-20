@@ -1,11 +1,10 @@
 "use client"
 import React, { useState } from 'react';
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button"; // Botão do seu sistema
+import { Button } from "@/components/ui/button";
 import { LoginFormInputs, LoginForm } from "./login-form";
 import { CadastroForm, CadastroFormInputs } from "./cadastro-form";
 
-// Imports atualizados para o padrão Base UI (conforme seu exemplo)
 import {
     Dialog,
     DialogClose,
@@ -72,7 +71,7 @@ export function Autenticacao() {
 
     return (
         <Dialog open={modalAberto} onOpenChange={setModalAberto}>
-            {/* No Base UI, usamos a prop 'render' para passar o componente do gatilho */}
+            {/* No Base UI, eh atualizada a prop 'render' para passar o componente do gatilho */}
             <DialogTrigger render={<Button variant="outline">Acessar Conta</Button>} />
 
             <DialogContent className="sm:max-w-md bg-white p-6 rounded-lg shadow-lg border border-gray-200">
