@@ -4,33 +4,25 @@ import { useForm } from "react-hook-form";
 import { Button } from "@base-ui/react/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UsuarioType } from "./usuario/type/usuarioType";
-
-//schema de verificacao de entradas
-const edicaoUsuarioSchema = z.object({
-    nome: z.string().min(1, "Nome é obrigatório"),
-    email: z.string().email("E-mail inválido."),
-    telefone: z.string().min(10, "Telefone inválido (mínimo de 10 dígitos)."),
-    cpf: z.string().min(11, "CPF inválido (mínimo de 11 dígitos)."),
-    senha: z.string().min(8, "Senha deve conter no mínimo 8 caracteres"),
-})
+import { UsuarioPublico } from "@/src/services/usuario.service";
+import { UsuarioUpdateSchema } from "@/src/schemas/usuario.schema";
 
 // extrai as informacoes dos campos
-export type EdicaoUsuarioFormInputs = z.infer<typeof edicaoUsuarioSchema>;
+export type EdicaoUsuarioFormInputs = z.infer<typeof UsuarioUpdateSchema>;
 
 // prop que vai receber a funcao da pagina pai
 // pagina pai: /src/app/usuario/[perfil]/page.tsx
 interface EdicaoUsuarioFormProps {
     aoEnviar: (data: EdicaoUsuarioFormInputs) => void;
     estaEditando: boolean;
-    usuario: UsuarioType;
+    usuario: UsuarioPublico;
     aoEditar: () => void;
     aoCancelar: () => void;
 }
 
 export function EdicaoUsuarioForm({ aoEnviar, estaEditando, usuario, aoEditar, aoCancelar }: EdicaoUsuarioFormProps) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<EdicaoUsuarioFormInputs>({
-        resolver: zodResolver(edicaoUsuarioSchema),
+        resolver: zodResolver(UsuarioUpdateSchema),
         defaultValues: {
             nome: usuario.nome,
             email: usuario.email,

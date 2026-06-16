@@ -6,23 +6,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 
-const imovelSchema = z.object({
-    titulo: z.string().min(3, "O título precisa ter pelo menos 3 caracteres"),
-    foto: z.string().url("Insira uma URL de imagem válida"),
-    localizacao: z.string().min(5, "A localização é obrigatória"),
+import { ImovelFormSchema } from "@/src/schemas/imovel.schema";
 
-    valorDiaria: z.number({
-        required_error: "O valor da diária é obrigatório",
-        invalid_type_error: "Digite um valor numérico válido",
-    }).min(1, "O valor deve ser maior que zero"),
-
-    status: z.enum(["livre", "ocupado", "manutencao"], {
-        required_error: "O status é obrigatório",
-        invalid_type_error: "Selecione um status válido",
-    })
-});
-
-export type ImovelFormInputs = z.infer<typeof imovelSchema>;
+export type ImovelFormInputs = z.infer<typeof ImovelFormSchema>;
 
 interface ImovelFormProps {
     aoEnviar: (data: ImovelFormInputs) => void;
@@ -33,7 +19,7 @@ interface ImovelFormProps {
 export function ImovelForm({ aoEnviar, valoresIniciais, textoBotao = "Salvar" }: ImovelFormProps) {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<ImovelFormInputs>({
-        resolver: zodResolver(imovelSchema),
+        resolver: zodResolver(ImovelFormSchema),
         defaultValues: valoresIniciais
     });
 

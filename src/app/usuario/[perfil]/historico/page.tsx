@@ -2,10 +2,9 @@
 
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect, use } from "react";
-import { reservasMock } from "@/src/modules/components/reserva/mocks/reserva-mock";
-import { imoveisMock } from "@/src/modules/components/imoveis/mocks/imoveisMock";
+import { useEffect, use, useState } from "react";
 import HospedagensUsuario, { ImoveisHospedagem } from "@/src/modules/components/tabela-historico";
+import { getReservasPorUsuario } from "@/src/services/reserva.service";
 
 // para rotas dinâmicas como /historico/[perfil]
 export default function HistoricoPage({ params }: { params: Promise<{ perfil: string }> }) {
@@ -18,24 +17,31 @@ export default function HistoricoPage({ params }: { params: Promise<{ perfil: st
     // desempacotamento do params
     const unwrappedParams = use(params);
 
-    // proteção de rota, se o usuario nao estiver logado, ele é redirecionado para a pagina inicial
+    // estado para armazenar as reservas
+    const [reservas, setReservas] = useState<ImoveisHospedagem[]>([]);
+    const [carregando, setCarregando] = useState(true);
+
+    // busca e uniao dos dados das reservas do usuario com informacoes dos imoveis
     useEffect(() => {
         if (!estaAutenticado) {
             router.push("/");
+            return;
         }
-    }, [estaAutenticado, router]);
 
-    // busca e uniao dos dados das reservas do usuario com informacoes dos imoveis
-    const reservasUsuario: ImoveisHospedagem[] = reservasMock
-        .filter((reserva) => reserva.usuarioId === unwrappedParams.perfil)
-        .map((reserva) => {
-            const imovel = imoveisMock.find(i => i.id === reserva.imovelId);
+        async function buscarReservas() {
+            try {
+                const dados = await getReservasPorUsuario(unwrappedParams.perfil);
+                setReservas(dados);
+            } catch (erro) {
+                console.error("Erro ao buscar reservas:", erro);
+            } finally {
+                setCarregando(false);
+            }
+        }
 
-            return {
-                ...reserva,
-                imovel: imovel
-            };
-        });
+        buscarReservas();
+
+    }, [estaAutenticado, router, unwrappedParams.perfil]);
 
     return (
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border border-gray-100 p-6 mt-8">
@@ -52,8 +58,8 @@ export default function HistoricoPage({ params }: { params: Promise<{ perfil: st
             </div>
 
             {/* exibe a tabela se houver reservas, caso contrario mostra um estado vazio */}
-            {reservasUsuario.length > 0 ? (
-                <HospedagensUsuario reservas={reservasUsuario} />
+            {reservas.length > 0 ? (
+                <HospedagensUsuario reservas={reservas} />
             ) : (
                 <div className="bg-gray-50 p-8 rounded-lg text-center border border-dashed border-gray-300">
                     <p className="text-gray-500 font-medium">Nenhuma hospedagem encontrada no histórico.</p>

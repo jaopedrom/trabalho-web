@@ -4,6 +4,7 @@ import { use } from "react";
 import { useRouter } from "next/navigation";
 import { ImovelForm, ImovelFormInputs } from "@/src/modules/components/imovel-form";
 import { Button } from "@/components/ui/button";
+import { criarImovel } from "@/src/services/imovel.service";
 
 export default function AddImovelPage({ params }: { params: Promise<{ perfil: string }> }) {
     const router = useRouter();
@@ -12,23 +13,24 @@ export default function AddImovelPage({ params }: { params: Promise<{ perfil: st
     const { perfil } = use(params);
 
     // cadasttro
-    const lidarComCadastro = (dadosVindosDoForm: ImovelFormInputs) => {
-        // objeto de imovel
-        const novoImovel = {
-            id: `imovel-${Date.now()}`, // id gerado com base em timestamp
-            usuarioId: perfil,           // vincula ao dono
-            ...dadosVindosDoForm         // espalha dados
-        };
+    const lidarComCadastro = async (dadosVindosDoForm: ImovelFormInputs) => {
+        try {
+            const novoImovel = {
+                usuarioId: perfil,           // vincula ao dono
+                ...dadosVindosDoForm         // espalha dados
+            };
 
-        // simulacao de insercao de dados
-        console.log("Novo imóvel criado com sucesso:", novoImovel);
+            await criarImovel(novoImovel);
+            
+            console.log("Novo imóvel criado com sucesso:", novoImovel);
+            alert("Imóvel cadastrado com sucesso!");
 
-        // nao atualiza o mock, pois mock eh um array estatico
-        // usuariosMock.find(u => u.id === perfil)?.imoveis.push(novoImovel);
-        alert("Imóvel cadastrado com sucesso!");
-
-        // retorna para lista de imoveis do usuario
-        router.push(`/usuario/${perfil}/imovel-usuario`);
+            // retorna para lista de imoveis do usuario
+            router.push(`/usuario/${perfil}/imovel-usuario`);
+        } catch (error) {
+            console.error("Erro ao cadastrar:", error);
+            alert("Erro ao cadastrar o imóvel.");
+        }
     };
 
     return (
