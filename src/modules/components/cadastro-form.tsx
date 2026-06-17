@@ -5,17 +5,10 @@ import { Button } from "@base-ui/react/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-//schema de verificacao de entradas
-const cadastroSchema = z.object({
-    nome: z.string().min(1, "Nome é obrigatório"),
-    email: z.string().email("E-mail inválido."),
-    telefone: z.string().min(10, "Telefone inválido (mínimo de 10 dígitos)."),
-    cpf: z.string().min(11, "CPF inválido (mínimo de 11 dígitos)."),
-    senha: z.string().min(8, "Senha deve conter no mínimo 8 caracteres"),
-})
+import { UsuarioCreateSchema } from "@/src/schemas/usuario.schema";
 
 // extrai as informacoes dos campos
-export type CadastroFormInputs = z.infer<typeof cadastroSchema>;
+export type CadastroFormInputs = z.infer<typeof UsuarioCreateSchema>;
 
 // prop que vai receber a funcao da pagina pai
 // pagina pai: /src/app/autenticacao/cadastro/page.tsx
@@ -25,14 +18,14 @@ interface CadastroFormProps {
 
 export function CadastroForm({ aoEnviar }: CadastroFormProps) {
     const { register, handleSubmit, formState: { errors } } = useForm<CadastroFormInputs>({
-        resolver: zodResolver(cadastroSchema)
+        resolver: zodResolver(UsuarioCreateSchema)
     })
 
     // chama a prop aoEnviar
     return (
         <form
             className="flex flex-col gap-4 w-full max-w-64"
-            onSubmit={handleSubmit(aoEnviar)}>
+            onSubmit={handleSubmit(aoEnviar, (erros) => console.log("Erros de validação (Zod impediu o envio):", erros))}>
 
             <label className="text-sm leading-5 font-bold text-gray-900">Nome Completo</label>
             <input className="box-border pl-3.5 m-0 border border-gray-200 w-full h-10 rounded-md text-base font-normal bg-transparent
@@ -72,11 +65,11 @@ export function CadastroForm({ aoEnviar }: CadastroFormProps) {
                 placeholder="Digite uma senha:" />
             {errors.senha && <p className="text-red-500 text-xs mt-1">{errors.senha.message}</p>}
 
-            <Button className="box-border flex items-center justify-center h-10 px-3.5 m-0 outline-none border border-gray-200 rounded-md
+            <button className="box-border flex items-center justify-center h-10 px-3.5 m-0 outline-none border border-gray-200 rounded-md
             bg-gray-50 text-base font-normal leading-6 text-gray-900 select-none hover:not-data-disabled:bg-gray-100 active:not-data-disabled:bg-gray-200
             active:not-data-disabled:shadow-[inset_0_1px_3px_var(--color-gray-200)] active:not-data-disabled:border-t-gray-300 focus-visible:outline-2
             focus-visible:outline-blue-500 focus-visible:-outline-offset-1 data-disabled:text-gray-500"
-                type="submit">Cadastrar</Button>
+                type="submit">Cadastrar</button>
         </form>
     )
 }

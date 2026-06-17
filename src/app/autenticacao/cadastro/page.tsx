@@ -1,8 +1,7 @@
 "use client"
 
 import { CadastroForm, CadastroFormInputs } from "@/src/modules/components/cadastro-form";
-import { usuariosMock } from "@/src/modules/components/usuario/mock/mockUsuario";
-import { UsuarioType } from "@/src/modules/components/usuario/type/usuarioType";
+import { criarUsuario } from "@/src/services/usuario.service";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,30 +9,19 @@ export default function CadastroPage() {
     const router = useRouter();
     const [erro, setErro] = useState<string>("");
 
-    const processarCadastro = (data: CadastroFormInputs) => {
-        // verifica se o CPF já existe na lista de usuários
-        const usuarioJaExiste = usuariosMock.find(u => u.cpf === data.cpf);
+    const processarCadastro = async (data: CadastroFormInputs) => {
+        setErro("");
 
-        if (usuarioJaExiste) {
-            setErro("Este CPF já está cadastrado em nosso sistema!");
-            return;
+        try {
+            const novoUsuario = await criarUsuario(data);
+            console.log("Novo usuário cadastrado:", novoUsuario);
+
+            // redireciona para a página de login
+            alert("Cadastro realizado com sucesso! Faça login para continuar.");
+            router.push("/autenticacao/login");
+        } catch (error: any) {
+            setErro(error.message || "Ocorreu um erro ao realizar o cadastro. Tente novamente.");
         }
-
-        // monta o objeto novoUsuario no formato UsuarioType
-        const novoUsuario: UsuarioType = {
-            id: `user-${Date.now()}`, // ID gerado com base no timestamp
-            ...data, // insere nome, email, cpf, senha, telefone
-            imoveis: [] // Todo novo usuário começa com a lista de imóveis vazia
-        };
-
-        // salva no mock
-        usuariosMock.push(novoUsuario);
-
-        console.log("Novo usuário cadastrado:", novoUsuario);
-
-        // redireciona para a página de login
-        alert("Cadastro realizado com sucesso! Faça login para continuar.");
-        router.push("/autenticacao/login");
     };
 
     return (

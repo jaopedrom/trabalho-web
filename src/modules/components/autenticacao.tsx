@@ -15,9 +15,9 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { usuariosMock } from "@/src/modules/components/usuario/mock/mockUsuario";
 import { useAuth } from "@/src/contexts/AuthContext";
-import { UsuarioType } from "@/src/modules/components/usuario/type/usuarioType";
+import { criarUsuario } from "@/src/services/usuario.service";
+import { realizarLogin } from "@/src/services/autenticacao.service";
 
 export function Autenticacao() {
     const [telaAtiva, setTelaAtiva] = useState<"login" | "cadastro">("login");
@@ -27,41 +27,29 @@ export function Autenticacao() {
     const { login } = useAuth();
     const router = useRouter();
 
-    // Lógica de Login
-    const lidarComLogin = (dados: LoginFormInputs) => {
-        const usuarioEncontrado = usuariosMock.find((usuario) =>
-            usuario.cpf === dados.cpf && usuario.senha === dados.senha
-        );
-
-        if (usuarioEncontrado) {
-            login(usuarioEncontrado);
+    // login
+    const lidarComLogin = async (dados: LoginFormInputs) => {
+        setErro("");
+        try {
+            const usuarioAutenticado = await realizarLogin(dados);
+            login(usuarioAutenticado);
             setModalAberto(false);
-            setErro("");
-            router.push(`/usuario/${usuarioEncontrado.id}`);
-        } else {
-            setErro("CPF ou senha incorretos!");
+            router.push(`/usuario/${usuarioAutenticado.id}`);
+        } catch (error: any) {
+            setErro(error.message || "CPF ou senha incorretos!");
         }
     };
 
-    // Lógica de Cadastro
-    const lidarComCadastro = (dados: CadastroFormInputs) => {
-        const usuarioJaExiste = usuariosMock.find(u => u.cpf === dados.cpf);
-
-        if (usuarioJaExiste) {
-            setErro("Este CPF já está cadastrado!");
-            return;
-        }
-
-        const novoUsuario: UsuarioType = {
-            id: `user-${Date.now()}`,
-            ...dados,
-            imoveis: []
-        };
-
-        usuariosMock.push(novoUsuario);
-        alert("Cadastro realizado com sucesso!");
-        setTelaAtiva("login");
+    // cadastro
+    const lidarComCadastro = async (dados: CadastroFormInputs) => {
         setErro("");
+        try {
+            await criarUsuario(dados);
+            alert("Cadastro realizado com sucesso!");
+            setTelaAtiva("login");
+        } catch (error: any) {
+            setErro(error.message || "Este CPF ou Email já está cadastrado!");
+        }
     };
 
     const alternarTela = () => {

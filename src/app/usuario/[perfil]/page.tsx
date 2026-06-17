@@ -4,7 +4,7 @@ import { useAuth } from "@/src/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { EdicaoUsuarioForm, EdicaoUsuarioFormInputs } from "@/src/modules/components/edicao-usuario-form";
-import { getUsuarioPorId, atualizarUsuario, UsuarioPublico } from "@/src/services/usuario.service";
+import { getUsuarioPorId, atualizarUsuario, deletarUsuario, UsuarioPublico } from "@/src/services/usuario.service";
 
 export default function PerfilUsuarioPage({ params }: { params: Promise<{ perfil: string }> }) {
     const { usuarioLogado, logout, estaAutenticado } = useAuth();
@@ -76,6 +76,17 @@ export default function PerfilUsuarioPage({ params }: { params: Promise<{ perfil
         }
     };
 
+    const processarDelecao = async () => {
+        try {
+            await deletarUsuario(perfil);
+            logout();
+            router.push("/");
+        } catch (erro) {
+            console.error("Erro ao deletar usuário:", erro);
+            alert("Erro ao deletar a conta.");
+        }
+    };
+
     return (
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border border-gray-100 p-6 mt-8">
             <div className="flex justify-between items-center mb-6 pb-4 border-b">
@@ -103,6 +114,7 @@ export default function PerfilUsuarioPage({ params }: { params: Promise<{ perfil
                     usuario={usuario}
                     aoEditar={() => setEstaEditando(true)}
                     aoCancelar={() => setEstaEditando(false)}
+                    aoDeletar={processarDelecao}
                 />
             </div>
         </div>

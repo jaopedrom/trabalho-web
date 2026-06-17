@@ -18,9 +18,10 @@ interface EdicaoUsuarioFormProps {
     usuario: UsuarioPublico;
     aoEditar: () => void;
     aoCancelar: () => void;
+    aoDeletar?: () => void;
 }
 
-export function EdicaoUsuarioForm({ aoEnviar, estaEditando, usuario, aoEditar, aoCancelar }: EdicaoUsuarioFormProps) {
+export function EdicaoUsuarioForm({ aoEnviar, estaEditando, usuario, aoEditar, aoCancelar, aoDeletar }: EdicaoUsuarioFormProps) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<EdicaoUsuarioFormInputs>({
         resolver: zodResolver(UsuarioUpdateSchema),
         defaultValues: {
@@ -130,6 +131,19 @@ export function EdicaoUsuarioForm({ aoEnviar, estaEditando, usuario, aoEditar, a
                             className="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white transition-colors rounded-lg px-4 py-2">
                             Cancelar
                         </button>
+
+                        {aoDeletar && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (window.confirm("Tem certeza que deseja deletar sua conta? Esta ação não pode ser desfeita.")) {
+                                        aoDeletar();
+                                    }
+                                }}
+                                className="text-white bg-red-600 hover:bg-red-700 transition-colors rounded-lg px-4 py-2 ml-auto">
+                                Deletar Conta
+                            </button>
+                        )}
                     </>
                 )}
             </div>

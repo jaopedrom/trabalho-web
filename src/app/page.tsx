@@ -3,9 +3,8 @@
 import { CardImage } from "../modules/components/card-imoveis";
 import { useEffect, useState } from "react";
 import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
-import { imoveisMock } from "@/src/modules/components/imoveis/mocks/imoveisMock";
-import { reservasMock } from "../modules/components/reserva/mocks/reserva-mock";
 import Datepicker from "react-tailwindcss-datepicker";
+import { listarImoveisDisponiveis } from "@/src/services/imovel.service";
 
 export default function Home() {
     const [imoveis, setMoveis] = useState<ImovelType[]>([]);
@@ -20,45 +19,13 @@ export default function Home() {
     };
 
     useEffect(() => {
-        // filtro apenas para os imoveis que tem o status 'livre'
-        const imoveisLivres = imoveisMock.filter((imovel) => imovel.status === 'livre');
-
-        // usuario nao indicou nenhum data, mostra todos os imoveis disponiveis
-        if (!dataSelecionada.startDate || !dataSelecionada.endDate) {
-            setMoveis(imoveisLivres);
-            return;
-        }
-
-        // converte as datas escolhidas no Datepicker para formato que pode ser comparado
-        const dataCheckIn = new Date(dataSelecionada.startDate);
-        const dataCheckOut = new Date(dataSelecionada.endDate);
-
-        // filtro de imoveis por datas, usando apenas os livres
-        const imoveisDisponiveis = imoveisLivres.filter((imovel) => {
-
-            // procura se o imovel especifico tem alguma reserva conflitante
-            const temConflito = reservasMock.some((reserva) => {
-                // verifica se a reserva pertence a este imovel
-                if (reserva.imovelId !== imovel.id) return false;
-
-                // ignora reservas que ja foram canceladas ou concluidas
-                if (reserva.status === 'cancelada' || reserva.status === 'concluida') return false;
-
-                // converte as datas do mock em string para Date temporariamente
-                const reservaCheckIn = new Date(reserva.dataCheckIn);
-                const reservaCheckOut = new Date(reserva.dataCheckOut);
-
-                // sobreposicao de datas
-                return dataCheckIn < reservaCheckOut && dataCheckOut > reservaCheckIn;
-            });
-
-            // retorna true se nao tiver conflito
-            return !temConflito;
-        });
-
-        setMoveis(imoveisDisponiveis);
-
-    }, [dataSelecionada]); // sempre que data mudar, atualiza os imoveis
+        listarImoveisDisponiveis(
+            dataSelecionada.startDate || undefined,
+            dataSelecionada.endDate || undefined
+        )
+            .then(setMoveis)
+            .catch(console.error);
+    }, [dataSelecionada]);
 
     return (
         <main className="p-4 md:p-8 max-w-7xl mx-auto">

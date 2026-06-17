@@ -4,14 +4,10 @@ import { Button } from "@base-ui/react/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// schema de verificacao de entradas
-const loginSchema = z.object({
-    cpf: z.string().min(11, "CPF inválido (mínimo de 11 dígitos)."),
-    senha: z.string().min(8, "Senha deve conter no mínimo 8 caracteres"),
-});
+import { LoginSchema } from "@/src/schemas/usuario.schema";
 
 // extrai as informacoes dos campos
-export type LoginFormInputs = z.infer<typeof loginSchema>;
+export type LoginFormInputs = z.infer<typeof LoginSchema>;
 
 // prop que vai receber a funcao da pagina pai
 // pagina pai: /src/app/autenticacao/login/page.tsx
@@ -21,7 +17,7 @@ interface LoginFormProps {
 
 export function LoginForm({ aoEnviar }: LoginFormProps) {
     const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>({
-        resolver: zodResolver(loginSchema)
+        resolver: zodResolver(LoginSchema)
     });
 
     // chama a prop ao enviar

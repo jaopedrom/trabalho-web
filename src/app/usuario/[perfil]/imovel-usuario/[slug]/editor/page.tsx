@@ -3,7 +3,7 @@ import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImovelForm, ImovelFormInputs } from "@/src/modules/components/imovel-form";
 import { Button } from "@/components/ui/button";
-import { getImovelPorId, atualizarImovel } from "@/src/services/imovel.service";
+import { getImovelPorId, atualizarImovel, deletarImovel } from "@/src/services/imovel.service";
 import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
 
 export default function AttImovel({ params }: { params: Promise<{ perfil: string; slug: string }> }) {
@@ -45,6 +45,17 @@ export default function AttImovel({ params }: { params: Promise<{ perfil: string
         }
     }
 
+    async function lidarComDelecao() {
+        try {
+            await deletarImovel(slug);
+            alert("O imóvel foi deletado com sucesso!");
+            router.push(`/usuario/${perfil}/imovel-usuario/`);
+        } catch (error) {
+            alert("Erro ao deletar o imóvel!");
+            console.error(error);
+        }
+    }
+
     if (carregando) {
         return <p className="text-center mt-8 text-gray-500">Carregando...</p>;
     }
@@ -83,6 +94,7 @@ export default function AttImovel({ params }: { params: Promise<{ perfil: string
                     textoBotao={salvando ? "Salvando..." : "Guardar Alterações"}
                     valoresIniciais={imovel}
                     aoEnviar={lidarComAtualizacao}
+                    aoDeletar={lidarComDelecao}
                 />
             </div>
         </div>

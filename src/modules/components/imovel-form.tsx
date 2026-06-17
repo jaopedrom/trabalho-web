@@ -14,9 +14,10 @@ interface ImovelFormProps {
     aoEnviar: (data: ImovelFormInputs) => void;
     valoresIniciais?: ImovelFormInputs;
     textoBotao?: string;
+    aoDeletar?: () => void;
 }
 
-export function ImovelForm({ aoEnviar, valoresIniciais, textoBotao = "Salvar" }: ImovelFormProps) {
+export function ImovelForm({ aoEnviar, valoresIniciais, textoBotao = "Salvar", aoDeletar }: ImovelFormProps) {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<ImovelFormInputs>({
         resolver: zodResolver(ImovelFormSchema),
@@ -92,12 +93,28 @@ export function ImovelForm({ aoEnviar, valoresIniciais, textoBotao = "Salvar" }:
                 </div>
             </div>
 
-            <Button
-                className="mt-4 box-border flex items-center justify-center h-10 px-4 outline-none border-none rounded-md bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:-outline-offset-1 transition-colors"
-                type="submit"
-            >
-                {textoBotao}
-            </Button>
+            <div className="flex gap-4 mt-4">
+                {aoDeletar && (
+                    <button
+                        type="button"
+                        onClick={() => {
+                            if (window.confirm("Tem certeza que deseja deletar este imóvel? Esta ação não pode ser desfeita.")) {
+                                aoDeletar();
+                            }
+                        }}
+                        className="box-border flex items-center justify-center h-10 px-4 outline-none border border-red-600 rounded-md bg-transparent text-base font-medium text-red-600 hover:bg-red-600 hover:text-white transition-colors"
+                    >
+                        Deletar Imóvel
+                    </button>
+                )}
+
+                <Button
+                    className="box-border flex items-center justify-center h-10 px-4 outline-none border-none rounded-md bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:-outline-offset-1 transition-colors ml-auto"
+                    type="submit"
+                >
+                    {textoBotao}
+                </Button>
+            </div>
         </form>
     );
 }

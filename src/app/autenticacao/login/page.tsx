@@ -2,7 +2,7 @@
 "use client"
 
 import { LoginForm, LoginFormInputs } from "@/src/modules/components/login-form";
-import { usuariosMock } from "@/src/modules/components/usuario/mock/mockUsuario";
+import { realizarLogin } from "@/src/services/autenticacao.service";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,25 +12,24 @@ export default function LoginPage() {
     const router = useRouter();
     const [erro, setErro] = useState<string>("");
 
-    const processarLogin = (data: LoginFormInputs) => {
-        console.log("Processando login:", data);
+    const processarLogin = async (data: LoginFormInputs) => {
+        setErro("");
+        console.log("Processando login...");
 
-        // busca o usuário no mock
-        const usuarioEncontrado = usuariosMock.find((usuario) =>
-            usuario.cpf === data.cpf && usuario.senha === data.senha
-        );
+        try {
+            // usa a api para buscar e validar o usuario
+            const usuarioAutenticado = await realizarLogin(data);
 
-        if (usuarioEncontrado) {
-            // usa o contexto para fazer login e salva no localStorage automaticamente
-            login(usuarioEncontrado);
+            // usa o contexto para salvar a sessao e estado
+            login(usuarioAutenticado);
 
             console.log("Login realizado com sucesso!");
 
             // redireciona para a pagina de gerenciamento de usuario
-            router.push(`/usuario/${usuarioEncontrado.id}`);
-        } else {
-            // define mensagem de erro
-            setErro("CPF ou senha incorretos!");
+            router.push(`/usuario/${usuarioAutenticado.id}`);
+        } catch (error: any) {
+            // define mensagem de erro vinda do backend
+            setErro(error.message || "CPF ou senha incorretos!");
             console.log("Falha no login: credenciais inválidas");
         }
     };
