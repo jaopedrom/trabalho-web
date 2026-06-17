@@ -1,14 +1,13 @@
 // src/contexts/AuthContext.tsx
 "use client"
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { UsuarioType } from "@/src/modules/components/usuario/type/usuarioType";
-
-// chave para armazenar no localStorage
-const STORAGE_KEY = '@ProjetoWeb:usuario';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { UsuarioPublico } from "@/src/schemas/usuario.schema";
+import { verificarSessao } from '@/src/services/autenticacao.service';
 
 interface AuthContextType {
-    usuarioLogado: UsuarioType | null;
-    login: (usuario: UsuarioType) => void;
+    usuarioLogado: UsuarioPublico | null;
+    carregando: boolean;
+    login: (usuario: UsuarioPublico) => void;
     logout: () => void;
     estaAutenticado: boolean;
 }
@@ -16,62 +15,44 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 /**
- * Função auxiliar para buscar o usuário do LocalStorage de forma segura
- * Previne erros de hidratação no Next.js ao verificar se está no browser
- */
-const obterUsuarioInicial = (): UsuarioType | null => {
-    // Next.js roda no servidor primeiro (onde não tem window/localStorage)
-    // typeof window !== 'undefined' garante que só executa no browser
-    if (typeof window !== 'undefined') {
-        try {
-            const usuarioSalvo = localStorage.getItem(STORAGE_KEY);
-            if (usuarioSalvo) {
-                return JSON.parse(usuarioSalvo);
-            }
-        } catch (error) {
-            console.error('Erro ao recuperar usuário do localStorage:', error);
-            // Se houver erro ao parsear, limpa o localStorage
-            localStorage.removeItem(STORAGE_KEY);
-        }
-    }
-    return null;
-};
-
-/**
  * Provider do contexto de autenticação
  * Envolva sua aplicação com este provider no layout.tsx
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
-    // inicializa o estado com o usuário salvo no localStorage, caso ele exista
-    const [usuarioLogado, setUsuarioLogado] = useState<UsuarioType | null>(obterUsuarioInicial);
+    const [usuarioLogado, setUsuarioLogado] = useState<UsuarioPublico | null>(null);
+    const [carregando, setCarregando] = useState(true);
 
-    // funcao de login, salva usuario encontrado no localStorage
-    const login = (usuario: UsuarioType) => {
-        console.log('Fazendo login:', usuario.nome);
+    // Efeito para verificar se o usuário já tem uma sessão válida no back-end
+    useEffect(() => {
+        verificarSessao()
+            .then((usuario) => {
+                setUsuarioLogado(usuario);
+            })
+            .catch(() => {
+                // Se der erro (ex: 401), significa que não há sessão
+                setUsuarioLogado(null);
+            })
+            .finally(() => {
+                setCarregando(false);
+            });
+    }, []);
+
+    // funcao de login, atualiza o estado local (o cookie já foi salvo pelo navegador via HTTP)
+    const login = (usuario: UsuarioPublico) => {
+        console.log('Fazendo login no contexto:', usuario.nome);
         setUsuarioLogado(usuario);
-
-        // salva no localStorage
-        if (typeof window !== 'undefined') {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(usuario));
-        }
     };
 
-    // funcao para fazer logout, rmove o usuario do estado e do localstorage
+    // funcao para fazer logout, atualiza o estado local (o cookie já foi invalidado via HTTP)
     const logout = () => {
-        console.log('Fazendo logout');
+        console.log('Fazendo logout no contexto');
         setUsuarioLogado(null);
-
-        // Remove do localStorage
-        if (typeof window !== 'undefined') {
-            localStorage.removeItem(STORAGE_KEY);
-        }
     };
 
-    // verifica se ha um usuário logado
     const estaAutenticado = usuarioLogado !== null;
 
     return (
-        <AuthContext.Provider value={{ usuarioLogado, login, logout, estaAutenticado }}>
+        <AuthContext.Provider value={{ usuarioLogado, carregando, login, logout, estaAutenticado }}>
             {children}
         </AuthContext.Provider>
     );
@@ -79,13 +60,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 /**
  * Hook para usar o contexto de autenticação
- * Exemplo de uso:
- *
- * const { usuarioLogado, login, logout, estaAutenticado } = useAuth();
- *
- * if (estaAutenticado) {
- *   console.log('Usuário logado:', usuarioLogado.nome);
- * }
  */
 export function useAuth() {
     const context = useContext(AuthContext);
