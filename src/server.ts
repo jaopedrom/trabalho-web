@@ -25,7 +25,7 @@ fastify.register(cors, {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
 });
 
-// registra o plugin de JWT
+// registra o plugin de jwt
 fastify.register(fastifyJwt, {
     secret: "minha_chave_secreta_super_segura_aqui"
 });
