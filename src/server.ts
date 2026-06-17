@@ -27,7 +27,7 @@ fastify.register(cors, {
 
 // registra o plugin de JWT
 fastify.register(fastifyJwt, {
-    secret: "minha_chave_secreta_super_segura_aqui" // Idealmente use process.env.JWT_SECRET
+    secret: "minha_chave_secreta_super_segura_aqui"
 });
 
 // registra o plugin de Cookie
