@@ -1,0 +1,54 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = "file:../trabalho.db"
+}
+
+model Usuario {
+    id       String @id @default(uuid())
+    nome     String
+    email    String @unique
+    telefone String
+    senha    String
+    cpf      String @unique
+
+    imoveis  Imovel[]
+    reservas Reserva[]
+
+    @@map("tb_usuario")
+}
+
+model Imovel {
+    id          String @id @default(uuid())
+    titulo      String
+    foto        String
+    localizacao String
+    valorDiaria Float
+    status      String @default("livre")
+
+    usuarioId String
+    usuario   Usuario @relation(fields: [usuarioId], references: [id])
+
+    reservas Reserva[]
+
+    @@map("tb_imoveis")
+}
+
+model Reserva {
+    id           String   @id @default(uuid())
+    dataCheckIn  DateTime
+    dataCheckOut DateTime
+    valorTotal   Float
+    status       String   @default("pendente")
+
+    usuarioId String
+    usuario   Usuario @relation(fields: [usuarioId], references: [id])
+
+    imovelId String
+    imovel   Imovel @relation(fields: [imovelId], references: [id])
+
+    @@map("tb_reserva")
+}
