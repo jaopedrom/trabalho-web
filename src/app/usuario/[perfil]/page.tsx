@@ -3,7 +3,7 @@ import { use, useEffect, useState } from "react";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { EdicaoUsuarioForm, EdicaoUsuarioFormInputs } from "@/src/modules/components/edicao-usuario-form";
+import { EdicaoUsuarioForm, EdicaoUsuarioFormInputs } from "@/src/components/edicao-usuario-form";
 import { getUsuarioPorId, atualizarUsuario, deletarUsuario, UsuarioPublico } from "@/src/services/usuario.service";
 
 export default function PerfilUsuarioPage({ params }: { params: Promise<{ perfil: string }> }) {

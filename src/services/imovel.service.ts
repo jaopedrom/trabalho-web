@@ -1,4 +1,4 @@
-import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
+import { ImovelType } from "@/src/components/imoveis/types/imoveisType";
 
 export async function getImovelPorId(id: string): Promise<ImovelType> {
     const response = await fetch(`http://localhost:3333/imoveis/${id}`);

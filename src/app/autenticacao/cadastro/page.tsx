@@ -1,6 +1,6 @@
 "use client"
 
-import { CadastroForm, CadastroFormInputs } from "@/src/modules/components/cadastro-form";
+import { CadastroForm, CadastroFormInputs } from "@/src/components/cadastro-form";
 import { criarUsuario } from "@/src/services/usuario.service";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

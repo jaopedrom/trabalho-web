@@ -1,5 +1,5 @@
-import { LoginType } from "@/src/schemas/autenticacao.schema";
-import { UsuarioPublico } from "@/src/schemas/usuario.schema";
+import { LoginType } from "@/src/api/schemas/autenticacao.schema";
+import { UsuarioPublico } from "@/src/api/schemas/usuario.schema";
 
 const API_URL = "http://localhost:3333/autenticacao";
 

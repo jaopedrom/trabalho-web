@@ -1,5 +1,5 @@
 // listar reservas de um usuario
-import { ReservaType } from "@/src/modules/components/reserva/reserva-type";
+import { ReservaType } from "@/src/components/reserva/reserva-type";
 
 export async function getReservasPorUsuario(usuarioId: string): Promise<ReservaType[]> {
     const response = await fetch(

@@ -1,7 +1,7 @@
 // src/contexts/AuthContext.tsx
 "use client"
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { UsuarioPublico } from "@/src/schemas/usuario.schema";
+import { UsuarioPublico } from "@/src/api/schemas/usuario.schema";
 import { verificarSessao } from '@/src/services/autenticacao.service';
 
 interface AuthContextType {

@@ -2,7 +2,7 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { usuariosMock } from "@/src/modules/components/usuario/mock/mockUsuario";
+import { usuariosMock } from "@/src/components/usuario/mock/mockUsuario";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 

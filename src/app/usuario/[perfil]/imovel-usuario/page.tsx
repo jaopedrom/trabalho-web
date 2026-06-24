@@ -2,9 +2,9 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CardImage } from "@/src/modules/components/card-imoveis";
+import { CardImage } from "@/src/components/card-imoveis";
 import { getImoveisDoUsuario } from "@/src/services/usuario.service";
-import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
+import { ImovelType } from "@/src/components/imoveis/types/imoveisType";
 
 export default function ImoveisPage({ params }: { params: Promise<{ perfil: string }> }) {
     const { perfil } = use(params);

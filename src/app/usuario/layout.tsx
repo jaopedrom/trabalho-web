@@ -1,4 +1,4 @@
-import { MenubarDemo } from "@/src/modules/components/navbar-usuario";
+import { MenubarDemo } from "@/src/components/navbar-usuario";
 
 export default function UsuarioLayout({
                                           children,

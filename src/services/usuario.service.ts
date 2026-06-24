@@ -1,5 +1,5 @@
-import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
-import { UsuarioPublico, UsuarioUpdate, UsuarioCreate } from "@/src/schemas/usuario.schema";
+import { ImovelType } from "@/src/components/imoveis/types/imoveisType";
+import { UsuarioPublico, UsuarioUpdate, UsuarioCreate } from "@/src/api/schemas/usuario.schema";
 
 export type { UsuarioPublico };
 

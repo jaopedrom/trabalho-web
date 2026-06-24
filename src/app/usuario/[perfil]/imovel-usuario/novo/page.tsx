@@ -2,7 +2,7 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { ImovelForm, ImovelFormInputs } from "@/src/modules/components/imovel-form";
+import { ImovelForm, ImovelFormInputs } from "@/src/components/imovel-form";
 import { Button } from "@/components/ui/button";
 import { criarImovel } from "@/src/services/imovel.service";
 

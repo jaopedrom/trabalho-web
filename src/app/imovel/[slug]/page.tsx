@@ -1,10 +1,11 @@
 "use client"
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/src/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getImovelPorId } from "@/src/services/imovel.service";
-import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
+import { ImovelType } from "@/src/components/imoveis/types/imoveisType";
 
 export default function ImovelPublicoDetalhes({ params }: { params: Promise<{ slug: string }> }) {
     const router = useRouter();
@@ -13,6 +14,7 @@ export default function ImovelPublicoDetalhes({ params }: { params: Promise<{ sl
     const [imovel, setImovel] = useState<ImovelType | null>(null);
     const [carregando, setCarregando] = useState(true);
     const [naoEncontrado, setNaoEncontrado] = useState(false);
+    const { usuarioLogado, estaAutenticado } = useAuth();
 
     useEffect(() => {
         async function buscarImovel() {
@@ -107,9 +109,15 @@ export default function ImovelPublicoDetalhes({ params }: { params: Promise<{ sl
                                 className="w-full h-14 text-base md:text-lg font-bold shadow-lg hover:shadow-xl transition-all active:scale-95"
                                 size="lg"
                                 disabled={imovel.status !== "livre"}
+                                // redireciona para a pagina de reserva, passando o id do imovel e do usuario
+                                // primeiro verifica se o usuario esta logado
                                 onClick={() => {
-                                    // implementacao da pagina de reserva
-                                    alert("Redirecionando para a página de finalização de reserva...");
+                                    if (!estaAutenticado || !usuarioLogado) {
+                                        alert("Você precisa estar logado para realizar uma reserva.");
+                                        router.push("/autenticacao/login");
+                                        return;
+                                    }
+                                    router.push(`/usuario/${usuarioLogado.id}/reserva?imovelId=${imovel.id}&usuarioId=${usuarioLogado.id}`);
                                 }}
                             >
                                 {imovel.status === "livre" ? "Realizar Reserva" : "Imóvel Indisponível no Momento"}

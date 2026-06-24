@@ -1,7 +1,7 @@
 // src/app/autenticacao/login/page.tsx
 "use client"
 
-import { LoginForm, LoginFormInputs } from "@/src/modules/components/login-form";
+import { LoginForm, LoginFormInputs } from "@/src/components/login-form";
 import { realizarLogin } from "@/src/services/autenticacao.service";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useRouter } from "next/navigation";

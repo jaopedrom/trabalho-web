@@ -4,7 +4,7 @@ import cors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
 import { ZodTypeProvider } from "@fastify/type-provider-zod";
-import { registerRoutes } from "./routes";
+import { registerRoutes } from "./api/routes";
 import swaggerPlugin from './plugins/swagger.plugin';
 
 import zodPlugin from './plugins/zod.plugin';

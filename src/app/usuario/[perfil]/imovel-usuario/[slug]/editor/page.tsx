@@ -1,10 +1,10 @@
 "use client"
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ImovelForm, ImovelFormInputs } from "@/src/modules/components/imovel-form";
+import { ImovelForm, ImovelFormInputs } from "@/src/components/imovel-form";
 import { Button } from "@/components/ui/button";
 import { getImovelPorId, atualizarImovel, deletarImovel } from "@/src/services/imovel.service";
-import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
+import { ImovelType } from "@/src/components/imoveis/types/imoveisType";
 
 export default function AttImovel({ params }: { params: Promise<{ perfil: string; slug: string }> }) {
     const router = useRouter();

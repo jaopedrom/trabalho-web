@@ -3,7 +3,7 @@
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, use, useState } from "react";
-import HospedagensUsuario, { ImoveisHospedagem } from "@/src/modules/components/tabela-historico";
+import HospedagensUsuario, { ImoveisHospedagem } from "@/src/components/tabela-historico";
 import { getReservasPorUsuario } from "@/src/services/reserva.service";
 
 // para rotas dinâmicas como /historico/[perfil]
