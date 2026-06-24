@@ -1,8 +1,8 @@
 "use client"
 
-import { CardImage } from "../modules/components/card-imoveis";
+import { CardImage } from "@/src/components/card-imoveis";
 import { useEffect, useState } from "react";
-import { ImovelType } from "@/src/modules/components/imoveis/types/imoveisType";
+import { ImovelType } from "@/src/components/imoveis/types/imoveisType";
 import Datepicker from "react-tailwindcss-datepicker";
 import { listarImoveisDisponiveis } from "@/src/services/imovel.service";
 
