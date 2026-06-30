@@ -36,6 +36,11 @@ um backend robusto com banco de dados relacional e autenticação segura via coo
   - Dashboard de imóveis do anfitrião.
 - **Controle de Status**: Livre, Ocupado, Manutenção.
 
+### 📅 Gestão de Reservas
+- Fluxo completo de reserva de imóveis com seleção de datas via calendário interativo.
+- **Painel de Reservas (Anfitrião)**: Dashboard dedicado para gerenciar solicitações recebidas (aceitar, rejeitar ou cancelar).
+- Cálculo automático do valor total baseado nas diárias selecionadas.
+
 ### 🌐 Área Pública
 - Listagem de todos os imóveis disponíveis.
 - Página de detalhes públicos de cada propriedade.
@@ -70,18 +75,21 @@ um backend robusto com banco de dados relacional e autenticação segura via coo
 
 ```bash
 src
+├── api               # Backend: Lógica central da API (Fastify)
+│   ├── controllers   # Controladores (Tratamento de Requisições/Respostas)
+│   ├── routes        # Definição dos Endpoints da API
+│   ├── schemas       # Schemas de validação e tipagem (Zod)
+│   └── services      # Regras de Negócio e acesso ao Banco (Prisma)
 ├── app               # Frontend: Next.js App Router (Páginas, Layouts)
 │   ├── autenticacao  # Fluxos de login e cadastro
-│   ├── imovel        # Área pública de imóveis
+│   ├── imovel        # Área pública e detalhes de imóveis
+│   ├── reserva       # Fluxos de reserva e Painel de Reservas
 │   └── usuario       # Área privada protegida
-├── contexts          # Frontend: Context API (AuthContext, etc)
-├── modules           # Frontend: Componentes reutilizáveis
-├── plugins           # Backend: Plugins Fastify (Swagger, Zod, Logger)
-├── prisma            # Backend: Schema do banco de dados (schema.prisma)
-├── routes            # Backend: Rotas da API Fastify
-├── schemas           # Backend/Frontend: Schemas de validação globais (Zod)
-├── services          # Frontend/Backend: Camada de comunicação de dados
-└── server.ts         # Backend: Ponto de entrada do servidor Fastify
+├── components        # Frontend: Componentes de interface (shadcn, etc)
+├── contexts          # Frontend: Context API (AuthContext)
+├── plugins           # Backend: Configurações do Fastify (Swagger, Zod)
+├── prisma            # Backend: Banco de Dados (schema.prisma)
+└── server.ts         # Backend: Ponto de entrada da aplicação
 ```
 
 ---

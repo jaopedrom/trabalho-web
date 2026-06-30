@@ -1,7 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { usuariosMock } from '../modules/components/usuario/mock/mockUsuario';
-import { imoveisMock } from '../modules/components/imoveis/mocks/imoveisMock';
-import { reservasMock } from '../modules/components/reserva/mocks/reserva-mock';
+import bcrypt from 'bcryptjs';
+import { usuariosMock } from '../components/usuario/mock/mockUsuario';
+import { imoveisMock } from '../components/imoveis/mocks/imoveisMock';
+import { reservasMock } from '../components/reserva/mocks/reserva-mock';
 
 const prisma = new PrismaClient();
 
@@ -16,13 +17,14 @@ async function main() {
 
     // Seed de Usuários
     for (const u of usuariosMock) {
+        const hashSenha = await bcrypt.hash(u.senha, 10);
         await prisma.usuario.create({
             data: {
                 id: u.id,
                 nome: u.nome,
                 email: u.email,
                 telefone: u.telefone,
-                senha: u.senha,
+                senha: hashSenha,
                 cpf: u.cpf,
             },
         });
