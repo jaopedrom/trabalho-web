@@ -39,9 +39,14 @@ export default function ImoveisPage({ params }: { params: Promise<{ perfil: stri
                     <p className="text-gray-500 mt-1">Gira e acompanhe as suas propriedades</p>
                 </div>
                 {imoveis.length > 0 && (
-                    <Link href={`/usuario/${perfil}/imovel-usuario/novo`}>
-                        <Button>Adicionar Imóvel</Button>
-                    </Link>
+                    <div className="flex gap-4">
+                        <Link href={`/usuario/${perfil}/imovel-usuario/reservas`}>
+                            <Button variant="outline">Painel de Reservas</Button>
+                        </Link>
+                        <Link href={`/usuario/${perfil}/imovel-usuario/novo`}>
+                            <Button>Adicionar Imóvel</Button>
+                        </Link>
+                    </div>
                 )}
             </div>
 
