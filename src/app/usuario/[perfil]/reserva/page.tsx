@@ -9,13 +9,14 @@ import { ImovelType } from "@/src/components/imoveis/types/imoveisType";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-// Adicione um import para o serviço de reservas se existir, por enquanto vamos fazer um alert de sucesso
+import Datepicker from "react-tailwindcss-datepicker";
+import { getDatasIndisponiveis, criarReserva } from "@/src/services/reserva.service";
 
 function ReservaForm() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { usuarioLogado, estaAutenticado, carregando: carregandoAuth } = useAuth();
-    
+
     const imovelId = searchParams.get("imovelId");
     const usuarioId = searchParams.get("usuarioId");
 
@@ -24,6 +25,17 @@ function ReservaForm() {
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
     const [processando, setProcessando] = useState(false);
+
+    const [datasReserva, setDatasReserva] = useState({
+        startDate: null,
+        endDate: null,
+    });
+    const [datasOcupadas, setDatasOcupadas] = useState<{ startDate: string, endDate: string }[]>([]);
+    const [totalEstimado, setTotalEstimado] = useState(0);
+
+    const mudancaDeData = (newValue: any) => {
+        setDatasReserva(newValue);
+    };
 
     useEffect(() => {
         if (!carregandoAuth && !estaAutenticado) {
@@ -40,13 +52,15 @@ function ReservaForm() {
             }
 
             try {
-                const [imovelData, usuarioData] = await Promise.all([
+                const [imovelData, usuarioData, ocupadasData] = await Promise.all([
                     getImovelPorId(imovelId),
-                    getUsuarioPorId(usuarioId)
+                    getUsuarioPorId(usuarioId),
+                    getDatasIndisponiveis(imovelId)
                 ]);
 
                 setImovel(imovelData);
                 setUsuario(usuarioData);
+                setDatasOcupadas(ocupadasData);
             } catch (err) {
                 console.error("Erro ao buscar dados para reserva:", err);
                 setErro("Não foi possível carregar os dados para a reserva.");
@@ -60,19 +74,45 @@ function ReservaForm() {
         }
     }, [imovelId, usuarioId, estaAutenticado]);
 
+    useEffect(() => {
+        if (datasReserva.startDate && datasReserva.endDate && imovel) {
+            const start = new Date(datasReserva.startDate);
+            const end = new Date(datasReserva.endDate);
+            const dias = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24));
+
+            // se for o mesmo dia cobra 1 diaria, caso contrario calcula os dias
+            const diasCobrados = dias === 0 ? 1 : dias;
+
+            if (diasCobrados > 0) {
+                setTotalEstimado(diasCobrados * imovel.valorDiaria);
+            } else {
+                setTotalEstimado(0);
+            }
+        } else {
+            setTotalEstimado(0);
+        }
+    }, [datasReserva, imovel]);
+
     const confirmarReserva = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!datasReserva.startDate || !datasReserva.endDate) {
+            alert("Por favor, selecione as datas de check-in e check-out.");
+            return;
+        }
+
         setProcessando(true);
-        
+
         try {
-            // Aqui iria a chamada para o backend criar a reserva
-            // await criarReserva({ imovelId, usuarioId, ... })
-            
-            // Simulação de delay de rede
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            
+            await criarReserva({
+                imovelId,
+                usuarioId,
+                dataCheckIn: datasReserva.startDate,
+                dataCheckOut: datasReserva.endDate
+            });
+
             alert("Reserva realizada com sucesso!");
-            router.push(`/usuario/${usuarioId}/historico`); // Redireciona para o histórico ou painel
+            router.push(`/usuario/${usuarioId}/historico`);
         } catch (err) {
             console.error("Erro ao realizar reserva:", err);
             alert("Ocorreu um erro ao processar sua reserva. Tente novamente.");
@@ -101,8 +141,28 @@ function ReservaForm() {
     return (
         <div className="max-w-4xl mx-auto py-10 px-4">
             <h1 className="text-3xl font-bold mb-8 text-gray-900">Finalizar Reserva</h1>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            {/* Bloco Isolado: Período da Reserva */}
+            <div className="mb-8 p-6 bg-white border border-gray-200 rounded-xl shadow-sm relative z-50">
+                <h2 className="text-xl font-semibold text-gray-800 mb-2">Período da Reserva</h2>
+                <p className="text-sm text-gray-500 mb-4">Selecione as datas de check-in e check-out</p>
+
+                <div className="w-full md:w-[400px]">
+                    <Datepicker
+                        primaryColor={"blue"}
+                        value={datasReserva}
+                        onChange={mudancaDeData}
+                        displayFormat={"DD/MM/YYYY"}
+                        placeholder={"Selecione Check-in e Check-out"}
+                        disabledDates={datasOcupadas.map(d => ({
+                            startDate: new Date(d.startDate),
+                            endDate: new Date(d.endDate)
+                        }))}
+                    />
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
                 {/* Detalhes do Imóvel (Fixo) */}
                 <div>
                     <Card>
@@ -125,8 +185,7 @@ function ReservaForm() {
                                 </div>
                                 <div className="flex justify-between items-center font-bold text-lg mt-2 pt-2 border-t">
                                     <span>Total Estimado</span>
-                                    {/* Aqui você poderia calcular baseado em datas, por enquanto exibimos apenas a diária */}
-                                    <span>R$ {imovel.valorDiaria.toFixed(2)} / dia</span>
+                                    <span>R$ {totalEstimado > 0 ? totalEstimado.toFixed(2) : "0.00"}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -150,20 +209,23 @@ function ReservaForm() {
                                     <Label htmlFor="email">E-mail</Label>
                                     <Input id="email" value={usuario.email} readOnly className="bg-gray-50" />
                                 </div>
-                                {/* Adicione outros campos necessários como CPF, Telefone se tiver no model */}
+                                <div className="space-y-2">
+                                    <Label>Telefone</Label>
+                                    <Input id="telefone" value={usuario.telefone} readOnly className="bg-gray-50" />
+                                </div>
                             </CardContent>
                             <CardFooter className="flex-col gap-3">
-                                <Button 
-                                    type="submit" 
-                                    className="w-full" 
+                                <Button
+                                    type="submit"
+                                    className="w-full"
                                     size="lg"
                                     disabled={processando}
                                 >
                                     {processando ? "Processando..." : "Confirmar Reserva"}
                                 </Button>
-                                <Button 
-                                    type="button" 
-                                    variant="ghost" 
+                                <Button
+                                    type="button"
+                                    variant="ghost"
                                     className="w-full"
                                     onClick={() => router.back()}
                                     disabled={processando}
