@@ -1,7 +1,9 @@
 import { ImovelType } from "@/src/components/imoveis/types/imoveisType";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
+
 export async function getImovelPorId(id: string): Promise<ImovelType> {
-    const response = await fetch(`http://localhost:3333/imoveis/${id}`);
+    const response = await fetch(`${API_URL}/imoveis/${id}`);
 
     if (!response.ok) {
         throw new Error(`Imóvel não encontrado: ${response.status}`);
@@ -24,9 +26,9 @@ export async function listarImoveisDisponiveis(
         params.set('checkOut', checkOut);
     }
 
-    const backendUrl = typeof window !== 'undefined'
+    const backendUrl = typeof window !== 'undefined' && !process.env.NEXT_PUBLIC_API_URL
         ? `http://${window.location.hostname}:3333`
-        : 'http://localhost:3333';
+        : API_URL;
 
     const response = await fetch(`${backendUrl}/imoveis?${params.toString()}`);
     
@@ -40,9 +42,10 @@ export async function listarImoveisDisponiveis(
 export async function criarImovel(
     dados: Omit<ImovelType, "id">
 ): Promise<ImovelType> {
-    const response = await fetch(`http://localhost:3333/imoveis`, {
+    const response = await fetch(`${API_URL}/imoveis`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(dados),
     });
 
@@ -57,9 +60,10 @@ export async function atualizarImovel(
     id: string,
     dados: Omit<ImovelType, "id">
 ): Promise<ImovelType> {
-    const response = await fetch(`http://localhost:3333/imoveis/${id}`, {
+    const response = await fetch(`${API_URL}/imoveis/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(dados),
     });
 
@@ -71,8 +75,9 @@ export async function atualizarImovel(
 }
 
 export async function deletarImovel(id: string): Promise<void> {
-    const response = await fetch(`http://localhost:3333/imoveis/${id}`, {
+    const response = await fetch(`${API_URL}/imoveis/${id}`, {
         method: "DELETE",
+        credentials: "include",
     });
 
     if (!response.ok) {

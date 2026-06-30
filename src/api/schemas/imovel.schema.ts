@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
 
 // schema base para representar um imovel
 export const ImovelSchema = z.object({
@@ -42,7 +42,8 @@ export const ImovelBuscaQuerySchema = z.object({
     status: z.enum(['livre', 'ocupado', 'manutencao']).optional().describe('Filtrar imóveis por status'),
     localizacao: z.string().optional().describe('Filtrar imóveis por localização'),
     pagina: z.string().optional().describe('Página dos resultados'),
-    limite: z.string().optional().describe('Limite de itens (opcional)')
+    limite: z.string().optional().describe('Limite de itens (opcional)'),
+    usuarioId: z.string().optional().describe('Filtrar imóveis por dono')
 });
 
 // schema para lista de imoveis na resposta

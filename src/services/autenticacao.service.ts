@@ -1,7 +1,7 @@
 import { LoginType } from "@/src/api/schemas/autenticacao.schema";
 import { UsuarioPublico } from "@/src/api/schemas/usuario.schema";
 
-const API_URL = "http://localhost:3333/autenticacao";
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333'}/autenticacao`;
 
 export async function realizarLogin(dados: LoginType): Promise<UsuarioPublico> {
     const response = await fetch(`${API_URL}/login`, {

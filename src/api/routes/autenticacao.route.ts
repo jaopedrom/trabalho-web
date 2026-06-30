@@ -1,8 +1,8 @@
-import { z } from "zod";
 import { FastifyPluginAsyncZod } from "@fastify/type-provider-zod";
 import { AutenticacaoController } from "../controllers/autenticacao.controller";
 import { LoginSchema } from "../schemas/autenticacao.schema";
 import { UsuarioSchema } from "../schemas/usuario.schema";
+import { MensagemErroSchema } from "../schemas/erro.schema";
 
 const autenticacaoRoutes: FastifyPluginAsyncZod = async (fastify) => {
     fastify.post("/login", {
@@ -12,7 +12,7 @@ const autenticacaoRoutes: FastifyPluginAsyncZod = async (fastify) => {
             body: LoginSchema,
             response: {
                 200: UsuarioSchema,
-                401: z.object({ message: z.string() }),
+                401: MensagemErroSchema,
             },
         },
     }, AutenticacaoController.login);
@@ -23,7 +23,7 @@ const autenticacaoRoutes: FastifyPluginAsyncZod = async (fastify) => {
             summary: "Retorna o usuário logado com base no cookie de sessão",
             response: {
                 200: UsuarioSchema,
-                401: z.object({ message: z.string() }),
+                401: MensagemErroSchema,
             },
         },
     }, AutenticacaoController.me);
@@ -33,7 +33,7 @@ const autenticacaoRoutes: FastifyPluginAsyncZod = async (fastify) => {
             tags: ["autenticacao"],
             summary: "Encerra a sessão do usuário (remove o cookie)",
             response: {
-                200: z.object({ message: z.string() }),
+                200: MensagemErroSchema,
             },
         },
     }, AutenticacaoController.logout);

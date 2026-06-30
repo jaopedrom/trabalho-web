@@ -1,5 +1,6 @@
 import prisma from "@/src/prisma";
-import { z } from "zod/v4";
+import bcrypt from "bcryptjs";
+import { z } from "zod";
 import { LoginSchema } from "../schemas/autenticacao.schema";
 
 export class AutenticacaoService {
@@ -7,13 +8,15 @@ export class AutenticacaoService {
         const { cpf, senha } = dados;
 
         const usuario = await prisma.usuario.findFirst({
-            where: {
-                cpf,
-                senha,
-            },
+            where: { cpf },
         });
 
         if (!usuario) {
+            throw new Error("CPF ou senha incorretos");
+        }
+
+        const senhaValida = await bcrypt.compare(senha, usuario.senha);
+        if (!senhaValida) {
             throw new Error("CPF ou senha incorretos");
         }
 

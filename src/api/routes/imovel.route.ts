@@ -1,7 +1,7 @@
-import { z } from "zod";
 import { FastifyPluginAsyncZod } from "@fastify/type-provider-zod";
 import { ImovelController } from "../controllers/imovel.controller";
-import { ImovelSchema, ImovelBuscaQuerySchema } from "../schemas/imovel.schema";
+import { ImovelSchema, ImovelBuscaQuerySchema, ImovelParamsSchema } from "../schemas/imovel.schema";
+import { MensagemErroSchema } from "../schemas/erro.schema";
 
 const imoveisRoutes: FastifyPluginAsyncZod = async (fastify) => {
     // lista de imoveis disponíveis
@@ -21,34 +21,32 @@ const imoveisRoutes: FastifyPluginAsyncZod = async (fastify) => {
         schema: {
             tags: ["imoveis"],
             summary: "Busca um imóvel pelo ID",
-            params: z.object({
-                id: z.string(),
-            }),
+            params: ImovelParamsSchema,
             response: {
                 200: ImovelSchema,
-                404: z.object({ message: z.string() }),
+                404: MensagemErroSchema,
             },
         },
     }, ImovelController.obterPorId);
 
     // atualiza imovel
     fastify.put("/:id", {
+        preValidation: [fastify.authenticate],
         schema: {
             tags: ["imoveis"],
             summary: "Atualiza um imóvel pelo ID",
-            params: z.object({
-                id: z.string(),
-            }),
+            params: ImovelParamsSchema,
             body: ImovelSchema.omit({ id: true }),
             response: {
                 200: ImovelSchema,
-                404: z.object({ message: z.string() }),
+                404: MensagemErroSchema,
             },
         },
     }, ImovelController.atualizar);
 
     // cria novo imovel
     fastify.post("/", {
+        preValidation: [fastify.authenticate],
         schema: {
             tags: ["imoveis"],
             summary: "Cria um novo imóvel",
@@ -61,16 +59,14 @@ const imoveisRoutes: FastifyPluginAsyncZod = async (fastify) => {
 
     // deleta imovel
     fastify.delete("/:id", {
+        preValidation: [fastify.authenticate],
         schema: {
             tags: ["imoveis"],
             summary: "Deleta um imóvel pelo ID",
-            params: z.object({
-                id: z.string(),
-            }),
+            params: ImovelParamsSchema,
             response: {
-                204: z.null(),
-                404: z.object({ message: z.string() }),
-                500: z.object({ message: z.string() }),
+                404: MensagemErroSchema,
+                500: MensagemErroSchema,
             },
         },
     }, ImovelController.deletar);

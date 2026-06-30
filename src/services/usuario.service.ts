@@ -3,8 +3,10 @@ import { UsuarioPublico, UsuarioUpdate, UsuarioCreate } from "@/src/api/schemas/
 
 export type { UsuarioPublico };
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333';
+
 export async function getImoveisDoUsuario(usuarioId: string): Promise<ImovelType[]> {
-    const response = await fetch(`http://localhost:3333/imoveis?usuarioId=${usuarioId}`);
+    const response = await fetch(`${API_URL}/imoveis?usuarioId=${usuarioId}`);
 
     if (!response.ok) {
         throw new Error(`Erro ao buscar imóveis do usuário: ${response.status}`);
@@ -14,7 +16,7 @@ export async function getImoveisDoUsuario(usuarioId: string): Promise<ImovelType
 }
 
 export async function getUsuarioPorId(usuarioId: string): Promise<UsuarioPublico> {
-    const response = await fetch(`http://localhost:3333/usuarios/${usuarioId}`);
+    const response = await fetch(`${API_URL}/usuarios/${usuarioId}`);
 
     if (!response.ok) {
         throw new Error(`Usuário não encontrado: ${response.status}`);
@@ -27,9 +29,10 @@ export async function atualizarUsuario(
     usuarioId: string,
     dados: UsuarioUpdate
 ): Promise<UsuarioPublico> {
-    const response = await fetch(`http://localhost:3333/usuarios/${usuarioId}`, {
+    const response = await fetch(`${API_URL}/usuarios/${usuarioId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(dados),
     });
 
@@ -41,7 +44,7 @@ export async function atualizarUsuario(
 }
 
 export async function criarUsuario(dados: UsuarioCreate): Promise<UsuarioPublico> {
-    const response = await fetch(`http://localhost:3333/usuarios`, {
+    const response = await fetch(`${API_URL}/usuarios`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados),
@@ -56,8 +59,9 @@ export async function criarUsuario(dados: UsuarioCreate): Promise<UsuarioPublico
 }
 
 export async function deletarUsuario(usuarioId: string): Promise<void> {
-    const response = await fetch(`http://localhost:3333/usuarios/${usuarioId}`, {
+    const response = await fetch(`${API_URL}/usuarios/${usuarioId}`, {
         method: "DELETE",
+        credentials: "include",
     });
 
     if (!response.ok) {

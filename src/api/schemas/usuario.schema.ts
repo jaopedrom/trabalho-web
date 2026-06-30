@@ -33,3 +33,7 @@ export type UsuarioPublico = z.infer<typeof UsuarioSchema>;
 export type UsuarioUpdate = z.infer<typeof UsuarioUpdateSchema>;
 export type UsuarioCreate = z.infer<typeof UsuarioCreateSchema>;
 export type LoginInput = z.infer<typeof LoginSchema>;
+
+export const UsuarioParamsSchema = z.object({
+    id: z.string()
+});

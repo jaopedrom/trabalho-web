@@ -1,5 +1,6 @@
 import prisma from "@/src/prisma";
-import { z } from "zod/v4";
+import bcrypt from "bcryptjs";
+import { z } from "zod";
 import { UsuarioCreateSchema, UsuarioUpdateSchema } from "../schemas/usuario.schema";
 
 export class UsuarioService {
@@ -18,8 +19,13 @@ export class UsuarioService {
             throw new Error("E-mail ou CPF já cadastrados.");
         }
 
+        const hashSenha = await bcrypt.hash(dados.senha, 10);
+
         const novoUsuario = await prisma.usuario.create({
-            data: dados,
+            data: {
+                ...dados,
+                senha: hashSenha,
+            },
         });
 
         const { senha, ...dadosPublicos } = novoUsuario;
@@ -38,9 +44,14 @@ export class UsuarioService {
     }
 
     static async atualizar(id: string, dados: z.infer<typeof UsuarioUpdateSchema>) {
+        const dadosParaAtualizar = { ...dados };
+        if (dadosParaAtualizar.senha) {
+            dadosParaAtualizar.senha = await bcrypt.hash(dadosParaAtualizar.senha, 10);
+        }
+
         const usuarioAtualizado = await prisma.usuario.update({
             where: { id },
-            data: dados,
+            data: dadosParaAtualizar,
         });
 
         const { senha, ...dadosPublicos } = usuarioAtualizado;

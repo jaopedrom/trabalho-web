@@ -2,20 +2,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
-import {
-    jsonSchemaTransform,
-    jsonSchemaTransformObject,
-} from '@fastify/type-provider-zod';
-import { z } from 'zod/v4';
-import '../schemas';
-
-const componentsSchemas: any = {};
-const registryMap = (z.globalRegistry as any)._idmap;
-if (registryMap) {
-    for (const [id, schema] of registryMap.entries()) {
-        componentsSchemas[id] = z.toJSONSchema(schema);
-    }
-}
+import { jsonSchemaTransform } from '@fastify/type-provider-zod';
 
 async function swaggerPlugin(fastify: FastifyInstance) {
     await fastify.register(fastifySwagger, {
@@ -28,13 +15,14 @@ async function swaggerPlugin(fastify: FastifyInstance) {
             },
             servers: [
                 {
-                    url: 'http://localhost:3333',
+                    url: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3333',
                     description: 'Servidor local',
                 },
             ],
             tags: [
                 { name: 'imoveis', description: 'Gerenciamento de Imóveis' },
                 { name: 'usuarios', description: 'Gerenciamento de Usuários' },
+                { name: 'reservas', description: 'Gerenciamento de Reservas' },
                 { name: 'autenticacao', description: 'Autenticação' },
             ],
             components: {
@@ -45,11 +33,11 @@ async function swaggerPlugin(fastify: FastifyInstance) {
                         bearerFormat: 'JWT',
                     },
                 },
-                schemas: componentsSchemas,
             },
         },
+        // jsonSchemaTransform faz a conversão direta de schemas Zod para JSON Schema.
+        // Ele injeta automaticamente na rota, sem precisar de components.schemas globais.
         transform: jsonSchemaTransform,
-        transformObject: jsonSchemaTransformObject,
     });
 
     await fastify.register(fastifySwaggerUi, {
@@ -57,6 +45,4 @@ async function swaggerPlugin(fastify: FastifyInstance) {
     });
 }
 
-export default fp(swaggerPlugin, {
-    name: 'swagger',
-});
+export default fp(swaggerPlugin);

@@ -1,7 +1,7 @@
-import { z } from "zod";
 import { FastifyPluginAsyncZod } from "@fastify/type-provider-zod";
 import { UsuarioController } from "../controllers/usuario.controller";
-import { UsuarioSchema, UsuarioUpdateSchema, UsuarioCreateSchema } from "../schemas/usuario.schema";
+import { UsuarioSchema, UsuarioUpdateSchema, UsuarioCreateSchema, UsuarioParamsSchema } from "../schemas/usuario.schema";
+import { MensagemErroSchema } from "../schemas/erro.schema";
 
 const usuariosRoutes: FastifyPluginAsyncZod = async (fastify) => {
     // cria um novo usuario
@@ -12,7 +12,7 @@ const usuariosRoutes: FastifyPluginAsyncZod = async (fastify) => {
             body: UsuarioCreateSchema,
             response: {
                 201: UsuarioSchema,
-                400: z.object({ message: z.string() }),
+                400: MensagemErroSchema,
             },
         },
     }, UsuarioController.criar);
@@ -22,38 +22,39 @@ const usuariosRoutes: FastifyPluginAsyncZod = async (fastify) => {
         schema: {
             tags: ["usuarios"],
             summary: "Busca um usuário pelo ID",
-            params: z.object({ id: z.string() }),
+            params: UsuarioParamsSchema,
             response: {
                 200: UsuarioSchema,
-                404: z.object({ message: z.string() }),
+                404: MensagemErroSchema,
             },
         },
     }, UsuarioController.obterPorId);
 
     // atualiza usuario
     fastify.put("/:id", {
+        preValidation: [fastify.authenticate],
         schema: {
             tags: ["usuarios"],
             summary: "Atualiza dados de um usuário",
-            params: z.object({ id: z.string() }),
+            params: UsuarioParamsSchema,
             body: UsuarioUpdateSchema,
             response: {
                 200: UsuarioSchema,
-                404: z.object({ message: z.string() }),
+                404: MensagemErroSchema,
             },
         },
     }, UsuarioController.atualizar);
 
     // deleta usuario
     fastify.delete("/:id", {
+        preValidation: [fastify.authenticate],
         schema: {
             tags: ["usuarios"],
             summary: "Deleta um usuário",
-            params: z.object({ id: z.string() }),
+            params: UsuarioParamsSchema,
             response: {
-                204: z.null(),
-                404: z.object({ message: z.string() }),
-                500: z.object({ message: z.string() }),
+                404: MensagemErroSchema,
+                500: MensagemErroSchema,
             },
         },
     }, UsuarioController.deletar);

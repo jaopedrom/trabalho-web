@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { ImovelService } from "../services/imovel.service";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { ImovelCreateSchema, ImovelUpdateSchema } from "../schemas/imovel.schema";
 
 export class ImovelController {

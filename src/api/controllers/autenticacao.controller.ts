@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { AutenticacaoService } from "../services/autenticacao.service";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { LoginSchema } from "../schemas/autenticacao.schema";
 
 export class AutenticacaoController {

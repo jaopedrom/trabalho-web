@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { UsuarioService } from "../services/usuario.service";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { UsuarioCreateSchema, UsuarioUpdateSchema } from "../schemas/usuario.schema";
 
 export class UsuarioController {

@@ -1,5 +1,5 @@
 import prisma from "@/src/prisma";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { ImovelCreateSchema, ImovelUpdateSchema } from "../schemas/imovel.schema";
 
 export class ImovelService {
