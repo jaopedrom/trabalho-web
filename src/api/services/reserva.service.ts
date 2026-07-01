@@ -3,7 +3,8 @@ import prisma from "@/src/prisma";
 export class ReservaService {
     static async listarPorUsuario(usuarioId: string) {
         const reservas = await prisma.reserva.findMany({
-            where: { usuarioId }
+            where: { usuarioId },
+            include: { imovel: true }
         });
 
         return reservas.map(r => ({

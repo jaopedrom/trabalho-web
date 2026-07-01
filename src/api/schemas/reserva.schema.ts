@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { ImovelSchema } from "./imovel.schema";
+
 export const ReservaSchema = z.object({
     id: z.string(),
     usuarioId: z.string(),
@@ -8,6 +10,7 @@ export const ReservaSchema = z.object({
     dataCheckOut: z.string(),
     valorTotal: z.number(),
     status: z.enum(["pendente", "confirmada", "cancelada", "concluida"]),
+    imovel: ImovelSchema.optional(),
 });
 
 export const ReservaQuerySchema = z.object({

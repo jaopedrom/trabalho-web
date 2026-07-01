@@ -13,7 +13,8 @@ interface HospedagensUsuarioProps {
 export default function HospedagensUsuario({ reservas }: HospedagensUsuarioProps) {
     // formatacao de datas
     const formatarData = (dataStr: string) => {
-        const [ano, mes, dia] = dataStr.split("-");
+        const apenasData = dataStr.split("T")[0];
+        const [ano, mes, dia] = apenasData.split("-");
         return `${dia}/${mes}/${ano}`;
     };
 
