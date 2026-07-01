@@ -125,6 +125,8 @@ npx prisma db push --schema=src/prisma/schema.prisma
 npx prisma db seed
 ```
 
+> **🔑 Acesso de Teste (Mocks):** Ao executar o comando de seed, o banco de dados será populado com informações fictícias. Os arquivos de mock (geralmente localizados na pasta `src/components/.../mock` ou similares) contêm os cpf e senhas predefinidos, permitindo que você consiga fazer login na plataforma utilizando usuários já existentes sem precisar se cadastrar.
+
 ### Iniciando a Aplicação (Servidor e Client)
 
 Como a aplicação se tornou Fullstack, é necessário rodar o servidor Fastify e o frontend Next.js simultaneamente (em terminais separados):
