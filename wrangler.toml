@@ -1,0 +1,4 @@
+[[d1_databases]]
+binding = "trabalho_db" # Este é o nome da variável que você usará no código (env.DB)
+database_name = "trabalho-db"
+database_id = "9a5ca0fb-7b7c-4d61-90ad-99351f96e857" # Seu ID gerado
